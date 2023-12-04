@@ -3,8 +3,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using NameSpaceGameObject;
+using NameSpaceMissile;
 using NameSpaceVecteur2D;
 using Space_invaders.Properties;
+using NameSpaceMissile;
 using static System.Net.Mime.MediaTypeNames;
 
 
@@ -14,6 +16,7 @@ namespace NameSpaceVaisseauJoeur
     {
         // Vitesse du joueur
         private double VitessePixelParSeconde = 5.0;
+
         // Position du joueur (si image -> coordonnees x,y de l'angle supérieur gauche de l'image)
         public Vecteur2D Position { get; set; }
 
@@ -41,7 +44,7 @@ namespace NameSpaceVaisseauJoeur
             
         }
 
-        public override void MaJPosition(Keys key, Size gameSize)
+        public override void MaJ(Keys key, Size gameSize)
         {
             if (key == Keys.Left)
             {
@@ -52,7 +55,12 @@ namespace NameSpaceVaisseauJoeur
                 // TO DO : mettre 100 en variable
                 Position.x = Math.Min(gameSize.Width - 100 + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
             }
-            Console.WriteLine($"Position X: {Position.x}, Limite: {gameSize.Width - Image.Width}");
+            else if (key == Keys.Space)
+            {
+                Tirer();
+
+            }
+            //Console.WriteLine($"Position X: {Position.x}, Limite: {gameSize.Width - Image.Width}");
 
 
         }
@@ -60,6 +68,17 @@ namespace NameSpaceVaisseauJoeur
         public override bool EstVivant()
         {
             return Vies > 0;
+        }
+
+        //Methode tirer pour le vaisseau
+        //Missile
+        private Missile missile;
+        public void Tirer()
+        {
+            if (missile == null || missile.Vies == 0) 
+            {
+                Missile missile = new Missile(new Vecteur2D(50, 50), 10.0, 1);
+            }
         }
     }
 }

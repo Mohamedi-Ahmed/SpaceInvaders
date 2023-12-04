@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NameSpaceJeu;
+using NameSpaceMissile;
 using NameSpaceVaisseauJoeur;
 using NameSpaceVecteur2D;
 
@@ -18,9 +20,13 @@ namespace Space_invaders
         // Mes labels
         private Label labelScore;
         private Label labelVies;
+
+        //Mon vaisseau
+        private VaisseauJoeur vaisseau;
+        private Missile missile;
+
         // Mes boutons
         private Button BoutonCommencer;
-        private VaisseauJoeur vaisseau;
 
 
         public Form1()
@@ -30,6 +36,7 @@ namespace Space_invaders
             // Connexion la méthode "Form1_Paint" à l'evenement Paint 
             this.Paint += new PaintEventHandler(Form1_Paint);
 
+            // Connexion la méthode "BoutonDeplacement" à l'evenement Key 
             this.KeyDown += new KeyEventHandler(BoutonPresse);
             this.KeyPreview = true;
 
@@ -38,6 +45,8 @@ namespace Space_invaders
             //this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Modifier l'image de fond
+            this.BackgroundImage = Properties.Resources.fond_2;
+            this.BackgroundImageLayout = ImageLayout.Stretch;
 
             // Centrer l'écran de jeu
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -76,8 +85,6 @@ namespace Space_invaders
             // Positionner le labelVies après son ajout au Form
             PositionLabelInTopRightCorner();
 
-
-
             int largeur = 100; // Nouvelle largeur
             int hauteur = 100; // Nouvelle hauteur
 
@@ -88,6 +95,7 @@ namespace Space_invaders
             int positionY = this.Height - hauteur;
 
             vaisseau = new VaisseauJoeur(new Vecteur2D(positionX, positionY), 3);
+            missile = new Missile(new Vecteur2D(positionX+25, positionY-25), 10.0, 1);
             this.Invalidate(); // Force le formulaire à se redessiner
 
 
@@ -123,13 +131,17 @@ namespace Space_invaders
             {
                 vaisseau.Dessiner(e.Graphics);
             }
+            if(missile != null)
+            {
+                missile.Dessiner(e.Graphics);
+            }
         }
 
 
         private void BoutonPresse(object sender, KeyEventArgs e)
         {
             
-            vaisseau.MaJPosition(e.KeyCode, this.ClientSize);
+            vaisseau.MaJ(e.KeyCode, this.ClientSize);
             this.Invalidate();
         }
 

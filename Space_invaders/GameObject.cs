@@ -12,6 +12,6 @@ namespace NameSpaceGameObject
     {
         public abstract void Dessiner(Graphics graphics);
         public abstract bool EstVivant();
-        public abstract void MaJPosition(Keys key, Size gameSize);
+        public abstract void MaJ(Keys key, Size gameSize);
     }
 }

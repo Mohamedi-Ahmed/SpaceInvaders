@@ -13,7 +13,7 @@ namespace NameSpaceJeu
     {
         private VaisseauJoeur vaisseau_joueur;
         private Jeu(VaisseauJoeur vaisseau_joueur)
-        {
+        {/*
             int largeur = 100; // Nouvelle largeur
             int hauteur = 100; // Nouvelle hauteur
 
@@ -24,6 +24,7 @@ namespace NameSpaceJeu
             int positionY = Form.ActiveForm.Height - hauteur;
 
             this.vaisseau_joueur = new VaisseauJoeur(new Vecteur2D(positionX, positionY), 3);
-        }
+        */
+            }
     }
 }
