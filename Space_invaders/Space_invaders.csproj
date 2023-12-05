@@ -52,8 +52,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="VaisseauJoeur.cs" />
-    <Compile Include="Jeu.cs" />
+    <Compile Include="SpaceShip.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="BalleQuiTombe.cs" />
     <Compile Include="Vecteur2D.cs" />

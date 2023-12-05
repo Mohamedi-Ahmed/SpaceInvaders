@@ -28,7 +28,7 @@ namespace NameSpaceMissile
             Image = Resources.projectile;
         }
 
-        public override void Dessiner(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             int largeur = 50; // Nouvelle largeur
             int hauteur = 50; // Nouvelle hauteur
@@ -37,13 +37,14 @@ namespace NameSpaceMissile
 
         }
 
-        public override void MaJ(Keys key, Size gameSize)
+        public override void Update(Keys key, Size gameSize)
         {
-            Position.y = Position.y + Vitesse;
-            if(Position.y > gameSize.Height) { Vies = 0; }
+            Position.y = Position.y - Vitesse;
+            if(Position.y < 0) { Vies = 0; }
+            Console.WriteLine($"Position.y : {Position.y}");
         }
 
-        public override bool EstVivant()
+        public override bool IsAlive()
         {
             return Vies > 0;
         }

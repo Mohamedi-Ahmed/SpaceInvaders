@@ -10,8 +10,8 @@ namespace NameSpaceGameObject
 {
     public abstract class GameObject
     {
-        public abstract void Dessiner(Graphics graphics);
-        public abstract bool EstVivant();
-        public abstract void MaJ(Keys key, Size gameSize);
+        public abstract void Draw(Graphics graphics);
+        public abstract bool IsAlive();
+        public abstract void Update(Keys key, Size gameSize);
     }
 }

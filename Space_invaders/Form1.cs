@@ -8,9 +8,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NameSpaceJeu;
+using NameSpaceGameObject;
+using NameSpaceGame;
 using NameSpaceMissile;
-using NameSpaceVaisseauJoeur;
+using NameSpaceSpaceShip;
 using NameSpaceVecteur2D;
 
 namespace Space_invaders
@@ -21,17 +22,19 @@ namespace Space_invaders
         private Label labelScore;
         private Label labelVies;
 
-        //Mon vaisseau
-        private VaisseauJoeur vaisseau;
-        private Missile missile;
-
         // Mes boutons
         private Button BoutonCommencer;
 
+        //Mon jeu
+        private Game game;
+        public static List<GameObject> ObjetsDuJeu { get; set; }
 
         public Form1()
         {
             InitializeComponent();
+
+            //Mes objets 
+            ObjetsDuJeu = new List<GameObject>();
 
             // Connexion la méthode "Form1_Paint" à l'evenement Paint 
             this.Paint += new PaintEventHandler(Form1_Paint);
@@ -85,20 +88,6 @@ namespace Space_invaders
             // Positionner le labelVies après son ajout au Form
             PositionLabelInTopRightCorner();
 
-            int largeur = 100; // Nouvelle largeur
-            int hauteur = 100; // Nouvelle hauteur
-
-            // Calculer la position X pour centrer l'image
-            int positionX = (this.Width - largeur) / 2;
-
-            // Calculer la position Y pour placer l'image en bas de la fenêtre
-            int positionY = this.Height - hauteur;
-
-            vaisseau = new VaisseauJoeur(new Vecteur2D(positionX, positionY), 3);
-            missile = new Missile(new Vecteur2D(positionX+25, positionY-25), 10.0, 1);
-            this.Invalidate(); // Force le formulaire à se redessiner
-
-
             // Boutons
             /*
             BoutonCommencer = new Button
@@ -127,29 +116,38 @@ namespace Space_invaders
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            if (vaisseau != null)
+            foreach (var objet in ObjetsDuJeu)
             {
-                vaisseau.Dessiner(e.Graphics);
-            }
-            if(missile != null)
-            {
-                missile.Dessiner(e.Graphics);
+                objet.Draw(e.Graphics);
             }
         }
 
 
         private void BoutonPresse(object sender, KeyEventArgs e)
         {
-            
-            vaisseau.MaJ(e.KeyCode, this.ClientSize);
-            this.Invalidate();
+            /* Autre méthode 
+                 // Créer une copie temporaire de la liste pour l'itération
+                var tempObjetsDuJeu = new List<GameObject>(ObjetsDuJeu);
+
+                foreach (var gameObject in tempObjetsDuJeu)
+                {
+                    gameObject.Update(e.KeyCode, this.ClientSize);
+                }
+             */
+
+            for (int i = 0; i < ObjetsDuJeu.Count; i++)
+            {
+                ObjetsDuJeu[i].Update(e.KeyCode, this.ClientSize);
+            }
+
+            this.Invalidate(); // Pour redessiner le formulaire
         }
 
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            game = new Game(this.Width, this.Height);
         }
 
         static void Main(string[] args)

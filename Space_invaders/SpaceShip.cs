@@ -6,16 +6,19 @@ using NameSpaceGameObject;
 using NameSpaceMissile;
 using NameSpaceVecteur2D;
 using Space_invaders.Properties;
-using NameSpaceMissile;
+using NameSpaceGame;
 using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
+using NameSpaceGame;
+using Space_invaders;
 
 
-namespace NameSpaceVaisseauJoeur
+namespace NameSpaceSpaceShip
 {
-    class VaisseauJoeur : GameObject
+    class SpaceShip : GameObject
     {
         // Vitesse du joueur
-        private double VitessePixelParSeconde = 5.0;
+        private readonly double VitessePixelParSeconde = 5.0;
 
         // Position du joueur (si image -> coordonnees x,y de l'angle supérieur gauche de l'image)
         public Vecteur2D Position { get; set; }
@@ -27,7 +30,7 @@ namespace NameSpaceVaisseauJoeur
         public Bitmap Image { get; private set; }
 
         // Constructeur
-        public VaisseauJoeur(Vecteur2D position_initiale, int vies_initiales)
+        public SpaceShip(Vecteur2D position_initiale, int vies_initiales)
         {
             Position = position_initiale;
             Vies = vies_initiales;
@@ -35,7 +38,7 @@ namespace NameSpaceVaisseauJoeur
         }
 
 
-        public override void Dessiner(Graphics graphics)
+        public override void Draw(Graphics graphics)
         {
             int largeur = 100; // Nouvelle largeur
             int hauteur = 100; // Nouvelle hauteur
@@ -44,7 +47,7 @@ namespace NameSpaceVaisseauJoeur
             
         }
 
-        public override void MaJ(Keys key, Size gameSize)
+        public override void Update(Keys key, Size gameSize)
         {
             if (key == Keys.Left)
             {
@@ -57,7 +60,7 @@ namespace NameSpaceVaisseauJoeur
             }
             else if (key == Keys.Space)
             {
-                Tirer();
+                Shoot();
 
             }
             //Console.WriteLine($"Position X: {Position.x}, Limite: {gameSize.Width - Image.Width}");
@@ -65,20 +68,27 @@ namespace NameSpaceVaisseauJoeur
 
         }
 
-        public override bool EstVivant()
+        public override bool IsAlive()
         {
-            return Vies > 0;
+            return Vies > 0 && Position.y > 0;
         }
 
         //Methode tirer pour le vaisseau
-        //Missile
         private Missile missile;
-        public void Tirer()
+
+        public void Shoot()
         {
-            if (missile == null || missile.Vies == 0) 
+            if (missile == null || !missile.IsAlive())
             {
-                Missile missile = new Missile(new Vecteur2D(50, 50), 10.0, 1);
+                int widthImage = 50;
+                int heightImage = 50;
+                Console.WriteLine("Je suis ici");
+                Vecteur2D positionMissile = new Vecteur2D(Position.x + widthImage / 2, Position.y - heightImage / 2);
+                missile = new Missile(positionMissile, 10.0, 1);
+                Form1.ObjetsDuJeu.Add(missile);
+
             }
+
         }
     }
 }
