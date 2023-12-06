@@ -21,11 +21,14 @@ namespace SpaceInvaders
 
         // Mes dimensions images
           // Missile
-        public static int largeurImageMissile = 30;
-        public static int hauteurImageMissile = 30;
+        public static int largeurImageMissile = 15;
+        public static int hauteurImageMissile = 40;
             // SpaceShip
         public static int largeurImageSpaceShip = 100;
         public static int hauteurImageSpaceShip = 100;
+            // Bunkers
+        public static int largeurImageBunker = 200;
+        public static int hauteurImageBunker = 80;
 
         private int keyPressCount = 0;
         public Form1()
@@ -47,7 +50,7 @@ namespace SpaceInvaders
 
 
             // Désactiver le redimensionnement
-            //this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Modifier l'image de fond
             this.BackgroundImage = Resources.fond_2;

@@ -11,13 +11,10 @@ namespace SpaceInvaders.GameObjects
         // Vitesse du joueur
         private readonly double VitessePixelParSeconde = 5.0;
 
-
         // Constructeur
-
         public SpaceShip(Vecteur2D position_initiale, int vies_initiales)
             : base(position_initiale, Resources.joueur, vies_initiales)
         {
-            // Propriétés spécifiques à SpaceShip
         }
 
         public override void Update(Keys key, Size gameSize)
