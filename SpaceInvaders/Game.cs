@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using SpaceInvaders;
 using Space_invaders.GameObjects;
+using System.Linq;
 
 namespace SpaceInvaders
 {
@@ -42,21 +43,21 @@ namespace SpaceInvaders
             else if (state == GameState.Play)
             {
                 // Dessinez ici les éléments du jeu
-                foreach (var objet in Form1.ObjetsDuJeu)
+                foreach (var objet in gameInstance.ObjetsDuJeu)
                 {
                     if (objet.GetType() == typeof(Missile))
                     {
 
-                        objet.Draw(graphics, Form1.largeurImageMissile, Form1.hauteurImageMissile);
+                        objet.Draw(graphics, gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);
                     }
                     else if (objet.GetType() == typeof(SpaceShip))
                     {
 
-                        objet.Draw(graphics, Form1.largeurImageSpaceShip, Form1.hauteurImageSpaceShip);
+                        objet.Draw(graphics, gameInstance.largeurImageSpaceShip, gameInstance.hauteurImageSpaceShip);
                     }
                     else if(objet.GetType() == typeof(Bunker))
                     {
-                        objet.Draw(graphics, Form1.largeurImageBunker, Form1.hauteurImageBunker);
+                        objet.Draw(graphics, gameInstance.largeurImageBunker, gameInstance.hauteurImageBunker);
 
                     }
 
@@ -90,20 +91,21 @@ namespace SpaceInvaders
 
             if (state == GameState.Play)
             {
-                /* Autre méthode 
-                     // Créer une copie temporaire de la liste pour l'itération
-                    var tempObjetsDuJeu = new List<GameObject>(ObjetsDuJeu);
-
-                    foreach (var gameObject in tempObjetsDuJeu)
-                    {
-                        gameObject.Update(e.KeyCode, this.ClientSize);
-                    }
-                 */
-
-                for (int i = 0; i < Form1.ObjetsDuJeu.Count; i++)
+                for (int i = 0; i < gameInstance.ObjetsDuJeu.Count; i++)
                 {
-                    Form1.ObjetsDuJeu[i].Update(key, screenSize);
+                    gameInstance.ObjetsDuJeu[i].Update(key, screenSize);
+                    if (gameInstance.ObjetsDuJeu[i] is Missile missile)
+                    {
+                        // Vérifiez la collision entre le missile et chaque bunker
+                        foreach (var bunker in gameInstance.ObjetsDuJeu.OfType<Bunker>())
+                        {
+                            bunker.Collision(missile);
+
+                        }
+                    }
                 }
+                // Supprimer les missiles détruits après les mises à jour
+                gameInstance.ObjetsDuJeu.RemoveAll(objet => objet is Missile missile && missile.Vies <= 0);
 
             }
         }
@@ -111,14 +113,14 @@ namespace SpaceInvaders
 
         public Game(int Width, int Height)
         {
-            int positionXVaisseau = (Width - Form1.largeurImageSpaceShip) / 2;
-            int positionYVaisseau = Height - Form1.hauteurImageSpaceShip;
+            int positionXVaisseau = (Width - gameInstance.largeurImageSpaceShip) / 2;
+            int positionYVaisseau = Height - gameInstance.hauteurImageSpaceShip;
 
             // Creation du vaisseau
             playerShip = new SpaceShip(new Vecteur2D(positionXVaisseau, positionYVaisseau), 3);
 
             // Ajoutez le vaisseau à la liste des objets du jeu
-            Form1.ObjetsDuJeu.Add(playerShip);
+            gameInstance.ObjetsDuJeu.Add(playerShip);
 
             state = GameState.Play;
             Console.WriteLine($"First state : {state}");
@@ -126,16 +128,17 @@ namespace SpaceInvaders
             //Creation de 3 bunkers
             int nbBunkers = 3;
             int espaceEntreBunkers = 300; // Espace entre les bunkers
-            int margeBas = Form1.hauteurImageSpaceShip + 50; // Marge entre le bunker et le bas de la fenêtre
-            int largeurTotaleBunkers = Form1.largeurImageBunker * 3 + espaceEntreBunkers * 2;
+            int margeBas = gameInstance.hauteurImageSpaceShip + 50; // Marge entre le bunker et le bas de la fenêtre
+            int largeurTotaleBunkers = gameInstance.largeurImageBunker * 3 + espaceEntreBunkers * 2;
             int margeLaterale = (Width - largeurTotaleBunkers) / 2;
             margeLaterale = Math.Max(margeLaterale, 0);
 
             for (int i = 0; i < nbBunkers; i++)
             {
-                double x = margeLaterale + i * (Form1.largeurImageBunker + espaceEntreBunkers);
-                double y = Height - Form1.hauteurImageBunker - margeBas; // margeBas est la marge entre le bunker et le bas de la fenêtre
-                Form1.ObjetsDuJeu.Add(new Bunker(new Vecteur2D(x, y)));
+                double x = margeLaterale + i * (gameInstance.largeurImageBunker + espaceEntreBunkers);
+                double y = Height - gameInstance.hauteurImageBunker - margeBas; // margeBas est la marge entre le bunker et le bas de la fenêtre
+                Console.WriteLine($"Bunker {i} | Position x : {x}, y : {y}");
+                gameInstance.ObjetsDuJeu.Add(new Bunker(new Vecteur2D(x, y)));
 
             }
 

@@ -1,6 +1,6 @@
 ﻿namespace SpaceInvaders
 {
-    partial class Form1
+    partial class gameInstance
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -30,7 +30,7 @@
         {
             this.SuspendLayout();
             // 
-            // Form1
+            // gameInstance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -39,10 +39,10 @@
             this.ClientSize = new System.Drawing.Size(647, 501);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.DoubleBuffered = true;
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.Name = "gameInstance";
+            this.Text = "gameInstance";
+            this.Load += new System.EventHandler(this.gameInstance_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gameInstance_KeyDown);
             this.ResumeLayout(false);
 
         }

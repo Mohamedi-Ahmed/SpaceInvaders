@@ -32,5 +32,10 @@ namespace SpaceInvaders.GameObjects
         {
             return Vies > 0;
         }
+
+        public override void Collision(Missile m)
+        {
+            throw new System.NotImplementedException(); 
+        }
     }
 }

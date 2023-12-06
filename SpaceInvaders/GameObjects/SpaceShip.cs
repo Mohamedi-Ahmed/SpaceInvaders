@@ -25,7 +25,7 @@ namespace SpaceInvaders.GameObjects
             }
             else if (key == Keys.Right)
             {
-                Position.x = Math.Min(gameSize.Width - Form1.largeurImageSpaceShip + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
+                Position.x = Math.Min(gameSize.Width - gameInstance.largeurImageSpaceShip + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
             }
             else if (key == Keys.Space)
             {
@@ -42,12 +42,12 @@ namespace SpaceInvaders.GameObjects
         {
             if (missile == null || !missile.IsAlive())
             {
-                double positionXMissile = Position.x + Form1.largeurImageSpaceShip / 2 - Form1.largeurImageMissile / 2;
-                double positionYMissile = Position.y - Form1.hauteurImageMissile / 2 ;
+                double positionXMissile = Position.x + gameInstance.largeurImageSpaceShip / 2 - gameInstance.largeurImageMissile / 2;
+                double positionYMissile = Position.y - gameInstance.hauteurImageMissile / 2 ;
 
                 Vecteur2D positionMissile = new Vecteur2D(positionXMissile, positionYMissile);
                 missile = new Missile(positionMissile, 1);
-                Form1.ObjetsDuJeu.Add(missile);
+                gameInstance.ObjetsDuJeu.Add(missile);
 
             }
 

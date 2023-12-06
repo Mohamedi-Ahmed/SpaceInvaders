@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
-    public partial class Form1 : Form
+    public partial class gameInstance : Form
     {
         // Mes labels
         private Label labelScore;
@@ -31,7 +31,7 @@ namespace SpaceInvaders
         public static int hauteurImageBunker = 80;
 
         private int keyPressCount = 0;
-        public Form1()
+        public gameInstance()
         {
             InitializeComponent();
             //debug
@@ -40,13 +40,13 @@ namespace SpaceInvaders
             //Mes objets 
             ObjetsDuJeu = new List<GameObject>();
 
-            // Connexion la méthode "Form1_Paint" à l'evenement Paint 
-            this.Paint += new PaintEventHandler(Form1_Paint);
+            // Connexion la méthode "gameInstance_Paint" à l'evenement Paint 
+            this.Paint += new PaintEventHandler(gameInstance_Paint);
 
             // Suppression du double abonnement
-            this.KeyDown -= Form1_KeyDown;
+            this.KeyDown -= gameInstance_KeyDown;
             // Connexion la méthode "BoutonDeplacement" à l'evenement Key 
-            this.KeyDown += new KeyEventHandler(Form1_KeyDown);
+            this.KeyDown += new KeyEventHandler(gameInstance_KeyDown);
 
 
             // Désactiver le redimensionnement
@@ -120,13 +120,13 @@ namespace SpaceInvaders
             }
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void gameInstance_Paint(object sender, PaintEventArgs e)
         {
                 game.Draw(e.Graphics);   
         }
 
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void gameInstance_KeyDown(object sender, KeyEventArgs e)
         {
             keyPressCount++;
             Console.WriteLine("Touche pressée: " + e.KeyCode + " | Compteur: " + keyPressCount);
@@ -136,7 +136,7 @@ namespace SpaceInvaders
 
 
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void gameInstance_Load(object sender, EventArgs e)
         {
             game = new Game(this.Width, this.Height);
         }
@@ -148,7 +148,7 @@ namespace SpaceInvaders
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Remplacez 'MonFormulaire' par le nom de votre classe de formulaire
-            Application.Run(new Form1());
+            Application.Run(new gameInstance());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpaceInvaders.GameObjects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace SpaceInvaders
         public abstract void Draw(Graphics graphics, int largeur, int hauteur);
         public abstract bool IsAlive();
         public abstract void Update(Keys key, Size gameSize);
+        public abstract void Collision(Missile m);
+
     }
 }
