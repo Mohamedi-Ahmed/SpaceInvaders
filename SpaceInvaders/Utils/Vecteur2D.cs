@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NameSpaceVecteur2D
+namespace SpaceInvaders
 {
-    internal class Vecteur2D
+    public class Vecteur2D
     {
         public double x, y;
 

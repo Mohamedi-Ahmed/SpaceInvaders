@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NameSpaceGameObject
+namespace SpaceInvaders
 {
     public abstract class GameObject
     {
-        public abstract void Draw(Graphics graphics);
+        public abstract void Draw(Graphics graphics, int largeur, int hauteur);
         public abstract bool IsAlive();
         public abstract void Update(Keys key, Size gameSize);
     }

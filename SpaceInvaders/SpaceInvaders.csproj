@@ -46,17 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Missile.cs" />
+    <Compile Include="GameObjects\SimpleObject.cs" />
+    <Compile Include="GameObjects\Missile.cs" />
+    <Compile Include="GameObjects\SpaceShip.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="GameObjects\BalleQuiTombe.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SpaceShip.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="BalleQuiTombe.cs" />
-    <Compile Include="Vecteur2D.cs" />
+    <Compile Include="Utils\Vecteur2D.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,7 +94,6 @@
     <Content Include="Properties\fond_3.png" />
     <None Include="Properties\projectile.png" />
     <None Include="Properties\joueur.png" />
-    <Content Include="Ressources\fond_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

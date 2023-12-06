@@ -1,20 +1,10 @@
-﻿using System;
+﻿using Space_invaders.Properties;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using NameSpaceGameObject;
-using NameSpaceGame;
-using NameSpaceMissile;
-using NameSpaceSpaceShip;
-using NameSpaceVecteur2D;
 
-namespace Space_invaders
+namespace SpaceInvaders
 {
     public partial class Form1 : Form
     {
@@ -25,13 +15,24 @@ namespace Space_invaders
         // Mes boutons
         private Button BoutonCommencer;
 
-        //Mon jeu
-        private Game game;
+        // Mon jeu
+        private Game game ;
         public static List<GameObject> ObjetsDuJeu { get; set; }
 
+        // Mes dimensions images
+          // Missile
+        public static int largeurImageMissile = 30;
+        public static int hauteurImageMissile = 30;
+            // SpaceShip
+        public static int largeurImageSpaceShip = 100;
+        public static int hauteurImageSpaceShip = 100;
+
+        private int keyPressCount = 0;
         public Form1()
         {
             InitializeComponent();
+            //debug
+            Console.WriteLine("Debut | Compteur: " + keyPressCount);
 
             //Mes objets 
             ObjetsDuJeu = new List<GameObject>();
@@ -39,16 +40,17 @@ namespace Space_invaders
             // Connexion la méthode "Form1_Paint" à l'evenement Paint 
             this.Paint += new PaintEventHandler(Form1_Paint);
 
+            // Suppression du double abonnement
+            this.KeyDown -= Form1_KeyDown;
             // Connexion la méthode "BoutonDeplacement" à l'evenement Key 
-            this.KeyDown += new KeyEventHandler(BoutonPresse);
-            this.KeyPreview = true;
+            this.KeyDown += new KeyEventHandler(Form1_KeyDown);
 
 
             // Désactiver le redimensionnement
             //this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Modifier l'image de fond
-            this.BackgroundImage = Properties.Resources.fond_2;
+            this.BackgroundImage = Resources.fond_2;
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             // Centrer l'écran de jeu
@@ -61,6 +63,7 @@ namespace Space_invaders
             int h = Height >= screen.Height ? screen.Height : (screen.Height + Height) / 2;
             Location = new Point(screen.Left + (screen.Width - w) / 2, screen.Top + (screen.Height - h) / 2);
             Size = new Size(w, h);
+
 
             // Modifier le titre de l'écran de jeu
             this.Text = "SPACE INVADERS !";
@@ -116,31 +119,16 @@ namespace Space_invaders
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            foreach (var objet in ObjetsDuJeu)
-            {
-                objet.Draw(e.Graphics);
-            }
+                game.Draw(e.Graphics);   
         }
 
 
-        private void BoutonPresse(object sender, KeyEventArgs e)
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            /* Autre méthode 
-                 // Créer une copie temporaire de la liste pour l'itération
-                var tempObjetsDuJeu = new List<GameObject>(ObjetsDuJeu);
-
-                foreach (var gameObject in tempObjetsDuJeu)
-                {
-                    gameObject.Update(e.KeyCode, this.ClientSize);
-                }
-             */
-
-            for (int i = 0; i < ObjetsDuJeu.Count; i++)
-            {
-                ObjetsDuJeu[i].Update(e.KeyCode, this.ClientSize);
-            }
-
-            this.Invalidate(); // Pour redessiner le formulaire
+            keyPressCount++;
+            Console.WriteLine("Touche pressée: " + e.KeyCode + " | Compteur: " + keyPressCount);
+            game.Update(e.KeyCode, this.ClientSize);
+            this.Invalidate(); // Ceci demandera le redessin du formulaire
         }
 
 
@@ -152,6 +140,7 @@ namespace Space_invaders
 
         static void Main(string[] args)
         {
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
