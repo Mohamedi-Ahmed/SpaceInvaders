@@ -121,6 +121,21 @@
   <data name="alien" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>alien.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="alien_bleu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alien_bleu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="alien_jaune" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alien_jaune.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="alien_noir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alien_noir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullet_enemies" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bullet_enemies.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bunker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bunker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="fond_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>fond_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

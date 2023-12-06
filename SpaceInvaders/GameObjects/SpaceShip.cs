@@ -24,7 +24,7 @@ namespace SpaceInvaders.GameObjects
         {
             if (key == Keys.Left)
             {
-                Position.x = Math.Max(-17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
+                Position.x = Math.Max(0 + -17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
             }
             else if (key == Keys.Right)
             {
@@ -45,7 +45,10 @@ namespace SpaceInvaders.GameObjects
         {
             if (missile == null || !missile.IsAlive())
             {
-                Vecteur2D positionMissile = new Vecteur2D(Position.x + Form1.largeurImageMissile / 2, Position.y - Form1.hauteurImageMissile / 2);
+                double positionXMissile = Position.x + Form1.largeurImageSpaceShip / 2 - Form1.largeurImageMissile / 2;
+                double positionYMissile = Position.y - Form1.hauteurImageMissile / 2 ;
+
+                Vecteur2D positionMissile = new Vecteur2D(positionXMissile, positionYMissile);
                 missile = new Missile(positionMissile, 1);
                 Form1.ObjetsDuJeu.Add(missile);
 

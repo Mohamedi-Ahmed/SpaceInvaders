@@ -88,6 +88,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\bunker.png" />
+    <None Include="Resources\bullet_enemies.png" />
+    <None Include="Resources\alien_noir.png" />
+    <None Include="Resources\alien_jaune.png" />
+    <None Include="Resources\alien_bleu.png" />
     <None Include="Properties\alien.png" />
     <Content Include="Properties\fond_1.png" />
     <Content Include="Properties\fond_2.png" />
