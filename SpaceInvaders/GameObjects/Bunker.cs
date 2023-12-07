@@ -26,7 +26,7 @@ namespace Space_invaders.GameObjects
             if (bunkerRect.IntersectsWith(missileRect))
             {
                 // Effectuez le test pixel par pixel
-                Console.WriteLine("Je teste la collision");
+                //Console.WriteLine("Je teste la collision");
                 TestCollisionPixel(missile);
             }
         }
@@ -43,83 +43,41 @@ namespace Space_invaders.GameObjects
                 graphics.DrawRectangle(pen, bunkerRect);
             }
         }
-
-        private void TestCollisionPixel(Missile missile)
+        public void TestCollisionPixel(Missile missile)
         {
-            int collisionCount = 0;
-            Bitmap missileBitmap = new Bitmap(Resources.projectile);
-            Bitmap originalBunkerBitmap = new Bitmap(Resources.bunker);
-            //Bitmap bunkerBitmap = new Bitmap(gameInstance.largeurImageBunker, gameInstance.hauteurImageBunker, originalBunkerBitmap);
-            bool test = false;
-            int missilePixelX = (int)missile.Position.x;
-            int missilePixelY = (int)missile.Position.y;
-            Console.WriteLine($"missilePixelX : {missilePixelX} | missilePixelY : {missilePixelY}");
-            Bitmap gameSurface = new Bitmap(gameInstance.ActiveForm.Width, gameInstance.ActiveForm.Height);
+            Bitmap missileBitmap = new Bitmap(Resources.projectile, gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);
+            Bitmap bunkerBitmap = new Bitmap(this.Image, gameInstance.largeurImageBunker, gameInstance.hauteurImageBunker);
 
-            for (int x = 0; x < gameInstance.largeurImageMissile; x++)
+            // Parcourir chaque pixel du missile
+            for (int x = 0; x < missileBitmap.Width; x++)
             {
-                for (int y = 0; y < gameInstance.hauteurImageMissile; y++)
+                for (int y = 0; y < missileBitmap.Height; y++)
                 {
-                    // Calculer la position du pixel sur la surface de jeu
-                    int gameX = (int)missile.Position.x + x;
-                    int gameY = (int)missile.Position.y + y;
+                    int missileGlobalX = (int)missile.Position.x + x;
+                    int missileGlobalY = (int)missile.Position.y + y;
 
-                    // Vérifier si le pixel est dans les limites de la surface de jeu
-                    if (gameX >= 0 && gameX < gameInstance.ActiveForm.Width && gameY >= 0 && gameY < gameInstance.ActiveForm.Height)
+                    // Vérifier si le pixel est à l'intérieur des limites du bunker
+                    if (missileGlobalX >= this.Position.x && missileGlobalX < this.Position.x + bunkerBitmap.Width &&
+                        missileGlobalY >= this.Position.y && missileGlobalY < this.Position.y + bunkerBitmap.Height)
                     {
-                        // Obtenir la couleur du pixel à cette position
-                        Color colorAtPixel = gameSurface.GetPixel(gameX, gameY+10);
-                        Console.WriteLine($"colorAtPixel : {colorAtPixel}");
+                        int bunkerRelativeX = missileGlobalX - (int)this.Position.x;
+                        int bunkerRelativeY = missileGlobalY - (int)this.Position.y;
 
-                        // Vérifier si la couleur correspond à notre critère (vert avec G = 252)
-                        if (colorAtPixel.G == 252)
+                        Color bunkerPixelColor = bunkerBitmap.GetPixel(bunkerRelativeX, bunkerRelativeY);
+
+                        //(normalement bunkerPixelColor.G == 252 mais image pas totalement verte dont les contours)
+                        if (bunkerPixelColor.A > 128 && bunkerPixelColor.G > 200)
                         {
-                            test = true;
+                            bunkerBitmap.SetPixel(bunkerRelativeX, bunkerRelativeY, Color.Transparent);
+                            
+                            // Le missile est détruit
+                            missile.Vies = 0;
+                            // MaJ de l'image
+                            this.Image = bunkerBitmap;
                         }
                     }
                 }
             }
-            Console.WriteLine($"test : {test}");
-            //return false; // Aucune collision détectée
-
-
-            /*
-            for (int x = 0; x < gameInstance.largeurImageMissile; x++)
-            {
-                for (int y = 0; y < gameInstance.hauteurImageMissile; y++)
-                {
-                    // Calculez la position du pixel du missile par rapport au bunker
-                    int missilePixelX = (int)missile.Position.x + x;
-                    int missilePixelY = (int)missile.Position.y + y;
-
-                    // Vérifiez si le pixel est à l'intérieur du rectangle du bunker
-                    if (missilePixelX >= this.Position.x && missilePixelX < this.Position.x + gameInstance.largeurImageBunker &&
-                        missilePixelY >= this.Position.y && missilePixelY < this.Position.y + gameInstance.hauteurImageBunker)
-                    {
-                        Console.WriteLine("Il y a collision entre les rectangles!");
-                        // Obtenez les couleurs des pixels correspondants
-                        Color missilePixelColor = missileBitmap.GetPixel(x, y);
-                        Color bunkerPixelColor = bunkerBitmap.GetPixel(missilePixelX - (int)this.Position.x, missilePixelY - (int)this.Position.y);
-                        Console.WriteLine("missilePixelColor.A : "+ missilePixelColor + " bunkerPixelColor.A" + bunkerPixelColor);
-                        // Vérifiez si les deux pixels sont non-transparents
-                        if (bunkerPixelColor.A != 0)
-                        {
-                            collisionCount++;
-                            bunkerBitmap.SetPixel(missilePixelX - (int)this.Position.x, missilePixelY - (int)this.Position.y, Color.Transparent);
-
-                        }
-                    }
-                }
-            }
-            
-            // Mettez à jour l'image du bunker
-            this.Image = bunkerBitmap;
-
-            Console.WriteLine("CollisionCount : "+collisionCount);
-            // Soustrayez le nombre de collisions du nombre de vies du missile
-            missile.Vies -= collisionCount;
-            */
-
         }
         // ...
     }
