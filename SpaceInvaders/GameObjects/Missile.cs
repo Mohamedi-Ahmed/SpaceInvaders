@@ -20,19 +20,9 @@ namespace SpaceInvaders.GameObjects
         public override void Update(Keys key, Size gameSize)
         {
             Position.y = Position.y - vitesse;
-            Console.WriteLine($"Position y du missile : {Position.y}");
             if(Position.y < 0)
             { 
                 Vies = 0;
-                /*
-                // Suppression du missile de la liste des objets une fois que Vie = 0
-                var missilesASupprimer = gameInstance.ObjetsDuJeu.OfType<Missile>().ToList();
-
-                foreach (var missile in missilesASupprimer)
-                {
-                    gameInstance.ObjetsDuJeu.Remove(missile);
-                }
-                */
             }
         }
         // Rectangle englobant pour débugger
@@ -41,11 +31,13 @@ namespace SpaceInvaders.GameObjects
             base.Draw(graphics, largeur, hauteur);
 
             // Dessiner le rectangle englobant
+            /*
             Rectangle missileRect = new Rectangle((int)Position.x, (int)Position.y, gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);
             using (Pen pen = new Pen(Color.AntiqueWhite, 2))  // Couleur jaune pour le rectangle, épaisseur de 2
             {
                 graphics.DrawRectangle(pen, missileRect);
             }
+            */
         }
 
     }

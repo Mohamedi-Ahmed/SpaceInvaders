@@ -11,7 +11,7 @@ namespace SpaceInvaders.GameObjects
         public int Vies { get; set; }
 
         // Propriété  pour l'image de l'objet
-        protected Bitmap Image;
+        public Bitmap Image { get; set; }
 
         protected SimpleObject(Vecteur2D position, Bitmap image, int vies)
         {

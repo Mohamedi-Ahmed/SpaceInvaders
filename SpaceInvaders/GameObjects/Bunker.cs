@@ -32,6 +32,7 @@ namespace Space_invaders.GameObjects
         }
 
         // Rectangle englobant pour débugger
+        /*
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
             base.Draw(graphics, largeur, hauteur);
@@ -43,6 +44,7 @@ namespace Space_invaders.GameObjects
                 graphics.DrawRectangle(pen, bunkerRect);
             }
         }
+        */
         public void TestCollisionPixel(Missile missile)
         {
             Bitmap missileBitmap = new Bitmap(Resources.projectile, gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);

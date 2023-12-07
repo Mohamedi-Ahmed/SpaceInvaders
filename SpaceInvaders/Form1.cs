@@ -17,7 +17,7 @@ namespace SpaceInvaders
 
         // Mon jeu
         private Game game ;
-        public static List<GameObject> ObjetsDuJeu { get; set; }
+        public static HashSet<GameObject> ObjetsDuJeu { get; set; }
 
         // Mes dimensions images
           // Missile
@@ -29,6 +29,12 @@ namespace SpaceInvaders
             // Bunkers
         public static int largeurImageBunker = 200;
         public static int hauteurImageBunker = 80;
+        // Petits ennemies -- taille par defaut
+        public static int largeurImagePetitEnnemie = 100;
+        public static int hauteurImagePetitEnnemie = 100;
+        // Grands ennemies
+        public static int largeurImageGrandEnnemie = 200;
+        public static int hauteurImageGrandEnnemie = 100;
 
         private int keyPressCount = 0;
         public gameInstance()
@@ -38,7 +44,7 @@ namespace SpaceInvaders
             Console.WriteLine("Debut | Compteur: " + keyPressCount);
 
             //Mes objets 
-            ObjetsDuJeu = new List<GameObject>();
+            ObjetsDuJeu = new HashSet<GameObject>();
 
             // Connexion la méthode "gameInstance_Paint" à l'evenement Paint 
             this.Paint += new PaintEventHandler(gameInstance_Paint);
