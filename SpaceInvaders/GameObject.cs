@@ -9,6 +9,8 @@ using System.Windows.Forms;
 
 namespace SpaceInvaders
 {
+    public enum Side { Ally, Enemy, Neutral}
+
     public abstract class GameObject
     {
         public abstract void Draw(Graphics graphics, int largeur, int hauteur);
@@ -16,5 +18,10 @@ namespace SpaceInvaders
         public abstract void Update(Keys key, Size gameSize);
         public abstract void Collision(Missile m);
 
+        public Side ObjectSide { get; private set; }
+        public GameObject(Side objectSide)
+        {
+            ObjectSide = objectSide;
+        }
     }
 }

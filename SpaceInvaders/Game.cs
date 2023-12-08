@@ -7,6 +7,7 @@ using Space_invaders.GameObjects;
 using System.Linq;
 using System.Collections.Generic;
 using Space_invaders.Properties;
+using System.Reflection;
 
 namespace SpaceInvaders
 {
@@ -16,7 +17,7 @@ namespace SpaceInvaders
         private GameState state;
         private SpaceShip playerShip;
         private EnemyBlock enemies;
-
+        private Bunker bunker;
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
 
         public void AddNewGameObject()
@@ -33,7 +34,7 @@ namespace SpaceInvaders
                 SizeF textSize = graphics.MeasureString(pauseText, pauseFont);
 
                 // Calculer le point de départ pour centrer le texte
-                float x = (Form.ActiveForm.Width - textSize.Width) / 2;
+                float x = (Form.ActiveForm.Width  - textSize.Width) / 2;
                 float y = (Form.ActiveForm.Height - textSize.Height) / 2;
 
                 // Dessiner le texte centré
@@ -76,7 +77,7 @@ namespace SpaceInvaders
             throw new NotImplementedException();
         }
 
-        public void Update(Keys key, System.Drawing.Size screenSize)
+        public void Update(Keys key, Size screenSize)
         {
             if (key == Keys.P)
             {
@@ -100,16 +101,30 @@ namespace SpaceInvaders
 
                     if (gameObject is Missile missile)
                     {
-                        // Vérifiez la collision entre le missile et chaque bunker
-                        foreach (var bunker in gameInstance.ObjetsDuJeu.OfType<Bunker>())
-                        {
-                            bunker.Collision(missile);
+                            // Collision avec le vaisseau du joueur
+                                playerShip.Collision(missile);
 
-                        }
+                            // Collision avec les bunkers
+                            foreach (var bunker in gameInstance.ObjetsDuJeu.OfType<Bunker>())
+                            {
+
+                                    bunker.Collision(missile);
+
+                            }
+
+                            // Collision avec les ennemis
+                            foreach (var enemy in gameInstance.ObjetsDuJeu.OfType<EnemyBlock>())
+                            {
+
+                                    enemy.Collision(missile);
+                            }
+                        
                     }
                 }
                 // Supprimer les missiles détruits après les mises à jour
-                gameInstance.ObjetsDuJeu.RemoveWhere(objet => objet is Missile missile && missile.Vies <= 0);
+                gameInstance.ObjetsDuJeu.RemoveWhere(objet => !objet.IsAlive());
+
+
 
             }
         }
@@ -125,7 +140,11 @@ namespace SpaceInvaders
             int positionYVaisseau = Height - gameInstance.hauteurImageSpaceShip;
 
             // Creation du vaisseau
-            playerShip = new PlayerSpaceShip(new Vecteur2D(positionXVaisseau, positionYVaisseau), 3);
+            playerShip = new PlayerSpaceShip(new Vecteur2D(positionXVaisseau, positionYVaisseau), 3, Side.Ally)
+            {
+                ObjectWidth  = gameInstance.largeurImageSpaceShip,
+                ObjectHeight = gameInstance.hauteurImageSpaceShip
+            };
 
             // Ajoutez le vaisseau à la liste des objets du jeu
             gameInstance.ObjetsDuJeu.Add(playerShip);
@@ -146,14 +165,19 @@ namespace SpaceInvaders
                 double x = margeLaterale + i * (gameInstance.largeurImageBunker + espaceEntreBunkers);
                 double y = Height - gameInstance.hauteurImageBunker - margeBas; // margeBas est la marge entre le bunker et le bas de la fenêtre
                 Console.WriteLine($"Bunker {i} | Position x : {x}, y : {y}");
-                gameInstance.ObjetsDuJeu.Add(new Bunker(new Vecteur2D(x, y)));
+                bunker = new Bunker(new Vecteur2D(x, y), Side.Neutral)
+                {
+                    ObjectWidth  = gameInstance.largeurImageBunker,
+                    ObjectHeight = gameInstance.hauteurImageBunker
+                };
+                gameInstance.ObjetsDuJeu.Add(bunker);
 
             }
 
             // Creation du bloc d'ennemies
-            EnemyBlock enemies = new EnemyBlock(Width, new Vecteur2D(0.0, 0.0));
+            EnemyBlock enemies = new EnemyBlock(Width, new Vecteur2D(0.0, 0.0), Side.Enemy);
             // Ajout des lignes d'ennemies
-            enemies.AddLine(8, 1, Resources.alien, false);
+            enemies.AddLine(8, 1, Resources.alien_jaune, false);
             enemies.AddLine(3, 3, Resources.alien_bleu, true);
             enemies.AddLine(8, 1, Resources.alien_jaune, false);
 

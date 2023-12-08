@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,12 +25,17 @@ namespace Space_invaders.GameObjects
         public Size size {get; set;}
         // Coin sup. gauche du bloc
         public Vecteur2D Position { get; set;}
-        public EnemyBlock(int baseWidth, Vecteur2D position)
+
+        private double randomShootProbability;
+        private Random random = new Random();
+        public EnemyBlock(int baseWidth, Vecteur2D position, Side side) : base(side)
         {
             this.baseWidth = baseWidth;
             Position = position;
             enemyShips = new HashSet<SpaceShip>();
             nbLines = 0;
+            randomShootProbability = 0.01; // Valeur initiale, ajustez selon le niveau de difficulté souhaité
+
         }
 
         public void AddLine(int nbShips, int nbLives, Bitmap shipImage, bool isBigEnnemy)
@@ -70,7 +76,11 @@ namespace Space_invaders.GameObjects
                 int xPosition = spacing + i * (shipWidth + spacing);
 
                 // Créer et ajouter un nouveau vaisseau
-                SpaceShip newShip = new SpaceShip(new Vecteur2D(xPosition, yPosition), shipImage, nbLives);
+                SpaceShip newShip = new SpaceShip(new Vecteur2D(xPosition, yPosition), shipImage, nbLives, Side.Enemy)
+                {
+                    ObjectWidth  = shipWidth,
+                    ObjectHeight = shipHeight
+                };
                 enemyShips.Add(newShip);
             }
 
@@ -81,14 +91,16 @@ namespace Space_invaders.GameObjects
         {
             size = new Size(maxWidth, maxHeight);
         }
+
+
         double vitesseHorizontale = 5.0;
         int deplacementVertical = 10;
-        double incrementVitesse = -2.0;
+        double incrementVitesse = 0.5;
         public override void Update(Keys key, Size gameSize)
         {
             bool changeDirection = false;
 
-            Console.WriteLine($"Position.x  : {Position.x} -Form.ActiveForm.Width : {-Form.ActiveForm.Width} || size.Width : {size.Width}");
+            //Console.WriteLine($"Position.x  : {Position.x} -Form.ActiveForm.Width : {-Form.ActiveForm.Width} || size.Width : {size.Width}");
             if (Position.x  <= -Form.ActiveForm.Width || Position.x  >= size.Width)
             {
                 // Inverser la direction
@@ -99,7 +111,7 @@ namespace Space_invaders.GameObjects
                 Position.y += deplacementVertical;
 
                 // Augmenter la vitesse horizontale
-                //vitesseHorizontale += incrementVitesse;
+                vitesseHorizontale += Math.Sign(vitesseHorizontale) * incrementVitesse;
             }
             if (changeDirection)
             {
@@ -114,31 +126,62 @@ namespace Space_invaders.GameObjects
                 ship.Position.x += vitesseHorizontale;
                 Position.x += vitesseHorizontale;
             }
+
+            foreach (var ship in enemyShips)
+            {
+                if (random.NextDouble() <= randomShootProbability * 1)
+                {
+                    ship.Shoot(); 
+                }
+            }
+
+            // Augmentez randomShootProbability si le bloc descend
+            if (Position.y > Position.y+ deplacementVertical) // Remplacez par une condition appropriée
+            {
+                randomShootProbability += 0.1; // Ajustez cette valeur pour augmenter la difficulté
+            }
         }
 
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
                 foreach (SpaceShip ship in enemyShips)
                 {
-                    graphics.DrawImage(ship.Image, (float)ship.Position.x, (float)ship.Position.y, gameInstance.largeurImagePetitEnnemie, gameInstance.hauteurImagePetitEnnemie);
+                    graphics.DrawImage(ship.Image, (float)ship.Position.x, (float)ship.Position.y, ship.ObjectWidth, ship.ObjectHeight);
                 }
         }
 
         public override bool IsAlive()
         {
+            return enemyShips.Count > 0;
 
-            //return enemyShips.Count > 0;
-            foreach (SpaceShip ship in enemyShips)
-            {
-                if(ship.Vies>0){ return true; }
-
-            }
-            return false;
         }
-    
 
-        public override void Collision(Missile m)
+        public override void Collision(Missile missile)
         {
+            Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y, missile.ObjectWidth, missile.ObjectHeight);
+            Rectangle blockRect   = new Rectangle((int)Position.x, (int)Position.y, size.Width, size.Height);
+
+            // Vérifiez d'abord si le missile intersecte avec le rectangle du bloc ennemi
+            if (missileRect.IntersectsWith(blockRect))
+            {
+                HashSet<SpaceShip> toRemove = new HashSet<SpaceShip>();
+
+                foreach (var vaisseau in enemyShips)
+                {
+                    vaisseau?.Collision(missile);
+                    if (!vaisseau.IsAlive())
+                    {
+                        toRemove.Add(vaisseau);
+                    }
+                }
+
+                // Retirez les vaisseaux détruits
+                foreach (var vaisseau in toRemove)
+                {
+                    enemyShips.Remove(vaisseau);
+                }
+            }
         }
+
     }
 }

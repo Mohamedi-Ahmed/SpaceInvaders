@@ -9,42 +9,33 @@ namespace Space_invaders.GameObjects
 {
     internal class Bunker : SimpleObject
     {
-        public Bunker(Vecteur2D position_initiale): base(position_initiale, Resources.bunker, 1){   }
+        public Bunker(Vecteur2D position_initiale, Side side): base(position_initiale, Resources.bunker, 1, side){   }
         public override void Update(Keys key, Size gameSize)
         {
             // Ne fais rien !
         }
-        public override void Collision(Missile missile)
+        protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {
-            // Calculez les rectangles englobants pour le missile et le bunker
-            Rectangle bunkerRect  = new Rectangle((int)this.Position.x, (int)this.Position.y,
-                                                  gameInstance.largeurImageBunker, gameInstance.hauteurImageBunker);
-            Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y,
-                                                  gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);
-
-            // Vérifiez si les rectangles englobants s'intersectent
-            if (bunkerRect.IntersectsWith(missileRect))
-            {
-                // Effectuez le test pixel par pixel
-                //Console.WriteLine("Je teste la collision");
-                TestCollisionPixel(missile);
-            }
+            missile.Vies -= numberOfPixelsInCollision; // exemple simple
         }
 
+
         // Rectangle englobant pour débugger
-        /*
+        
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
             base.Draw(graphics, largeur, hauteur);
 
             // Dessiner le rectangle englobant
-            Rectangle bunkerRect = new Rectangle((int)this.Position.x, (int)this.Position.y, largeur, hauteur);
+            Rectangle bunkerRect = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
             using (Pen pen = new Pen(Color.Yellow, 2))  // Couleur jaune pour le rectangle, épaisseur de 2
             {
                 graphics.DrawRectangle(pen, bunkerRect);
             }
         }
-        */
+        
+
+        /*
         public void TestCollisionPixel(Missile missile)
         {
             Bitmap missileBitmap = new Bitmap(Resources.projectile, gameInstance.largeurImageMissile, gameInstance.hauteurImageMissile);
@@ -81,6 +72,8 @@ namespace Space_invaders.GameObjects
                 }
             }
         }
+        */
+
         // ...
     }
 }

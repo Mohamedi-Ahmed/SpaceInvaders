@@ -10,8 +10,8 @@ namespace SpaceInvaders.GameObjects
     {
 
         // Constructeur
-        public SpaceShip(Vecteur2D position_initiale, Bitmap image, int vies_initiales)
-            : base(position_initiale, image, vies_initiales)
+        public SpaceShip(Vecteur2D position_initiale, Bitmap image, int vies_initiales, Side side)
+            : base(position_initiale, image, vies_initiales, side)
         {
         }
         public override void Update(Keys key, Size gameSize)
@@ -25,15 +25,42 @@ namespace SpaceInvaders.GameObjects
         {
             if (missile == null || !missile.IsAlive())
             {
-                double positionXMissile = Position.x + gameInstance.largeurImageSpaceShip / 2 - gameInstance.largeurImageMissile / 2;
-                double positionYMissile = Position.y - gameInstance.hauteurImageMissile / 2 ;
+                // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau/alien
+                double positionXMissile = Position.x + this.ObjectWidth / 2 - gameInstance.largeurImageMissile / 2;
+
+                // Calcule la position y du missile pour qu'il commence au centre du vaisseau/alien
+                double positionYMissile = Position.y;
+
+                // Choix de l'image du missile en fonction du camp
+                Bitmap imageMissile = this.ObjectSide == Side.Ally ? Resources.projectile : Resources.bullet_enemies;
+
+                // Ajuster la position Y pour les missiles ennemis pour qu'ils apparaissent en bas de l'alien
+                if (this.ObjectSide == Side.Enemy)
+                {
+                    positionYMissile *= -1;
+                    positionYMissile += gameInstance.hauteurImageMissile;
+                    
+                }
+                else // Pour les missiles alliés, apparaissent en haut du vaisseau
+                {
+                    positionYMissile -= gameInstance.hauteurImageMissile / 2;
+                }
 
                 Vecteur2D positionMissile = new Vecteur2D(positionXMissile, positionYMissile);
-                missile = new Missile(positionMissile, 1);
-                gameInstance.ObjetsDuJeu.Add(missile);
 
+                missile = new Missile(positionMissile, imageMissile, 1, this.ObjectSide)
+                {
+                    ObjectHeight = gameInstance.hauteurImageMissile,
+                    ObjectWidth = gameInstance.largeurImageMissile
+                };
+                gameInstance.ObjetsDuJeu.Add(missile);
             }
 
+        }
+        protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
+        {
+            this.Vies -= 1; 
+            missile.Vies = 0; 
         }
     }
 
@@ -43,8 +70,8 @@ namespace SpaceInvaders.GameObjects
         // Vitesse du joueur
         private readonly double VitessePixelParSeconde = 10.0;
 
-        public PlayerSpaceShip(Vecteur2D position_initiale, int vies_initiales) 
-            : base(position_initiale, Resources.joueur, vies_initiales) { }   
+        public PlayerSpaceShip(Vecteur2D position_initiale, int vies_initiales, Side side) 
+            : base(position_initiale, Resources.joueur, vies_initiales, side) { }   
 
         public override void Update(Keys key, Size gameSize)
         {

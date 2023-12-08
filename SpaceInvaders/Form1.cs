@@ -21,7 +21,7 @@ namespace SpaceInvaders
 
         // Mes dimensions images
           // Missile
-        public static int largeurImageMissile = 15;
+        public static int largeurImageMissile = 20;
         public static int hauteurImageMissile = 40;
             // SpaceShip
         public static int largeurImageSpaceShip = 100;
@@ -33,7 +33,7 @@ namespace SpaceInvaders
         public static int largeurImagePetitEnnemie = 100;
         public static int hauteurImagePetitEnnemie = 100;
         // Grands ennemies
-        public static int largeurImageGrandEnnemie = 200;
+        public static int largeurImageGrandEnnemie = 150;
         public static int hauteurImageGrandEnnemie = 100;
 
         private int keyPressCount = 0;
@@ -66,6 +66,7 @@ namespace SpaceInvaders
             this.StartPosition = FormStartPosition.CenterScreen;
             
             // Modifier la taille de la fenêtre de jeu
+
             StartPosition = FormStartPosition.Manual;
             Rectangle screen = Screen.FromPoint(Cursor.Position).WorkingArea;
             int w = Width >= screen.Width ? screen.Width : (screen.Width + Width) / 2;
