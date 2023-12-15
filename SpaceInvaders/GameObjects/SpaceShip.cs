@@ -25,43 +25,58 @@ namespace SpaceInvaders.GameObjects
         {
             if (missile == null || !missile.IsAlive())
             {
-                // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau/alien
-                double positionXMissile = Position.x + this.ObjectWidth / 2 - gameInstance.largeurImageMissile / 2;
+                // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau
+                double positionXMissile = Position.x + (this.ObjectWidth / 2.0) - (gameInstance.largeurImageMissile / 2.0);
 
-                // Calcule la position y du missile pour qu'il commence au centre du vaisseau/alien
-                double positionYMissile = Position.y;
+                // Pour les vaisseaux ennemis, positionner le missile en bas du sprite
+                double positionYMissile = Position.y + this.ObjectHeight;
+                Bitmap imageMissile;
 
-                // Choix de l'image du missile en fonction du camp
-                Bitmap imageMissile = this.ObjectSide == Side.Ally ? Resources.projectile : Resources.bullet_enemies;
-
-                // Ajuster la position Y pour les missiles ennemis pour qu'ils apparaissent en bas de l'alien
-                if (this.ObjectSide == Side.Enemy)
+                // Créer le missile
+                if (this.ObjectSide == Side.Ally)
                 {
-                    positionYMissile *= -1;
-                    positionYMissile += gameInstance.hauteurImageMissile;
-                    
+                    // Pour les vaisseaux alliés, positionner le missile en haut du sprite
+                    positionYMissile = Position.y - gameInstance.hauteurImageMissile;
+                    imageMissile = Resources.projectile; // Image du missile allié
                 }
-                else // Pour les missiles alliés, apparaissent en haut du vaisseau
+                else
                 {
-                    positionYMissile -= gameInstance.hauteurImageMissile / 2;
+                    // Pour les vaisseaux ennemis, positionner le missile en bas du sprite
+                    positionYMissile = Position.y + this.ObjectHeight;
+                    imageMissile = Resources.bullet_enemies; // Image du missile ennemi
                 }
 
-                Vecteur2D positionMissile = new Vecteur2D(positionXMissile, positionYMissile);
-
-                missile = new Missile(positionMissile, imageMissile, 1, this.ObjectSide)
+                missile = new Missile(new Vecteur2D(positionXMissile, positionYMissile), imageMissile, 1, this.ObjectSide)
                 {
                     ObjectHeight = gameInstance.hauteurImageMissile,
                     ObjectWidth = gameInstance.largeurImageMissile
                 };
                 gameInstance.ObjetsDuJeu.Add(missile);
             }
-
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {
             this.Vies -= 1; 
             missile.Vies = 0; 
         }
+
+
+
+
+        /* Decommenter pour le debug
+        // Rectangle englobant pour débugger
+        public override void Draw(Graphics graphics, int largeur, int hauteur)
+        {
+            base.Draw(graphics, largeur, hauteur);
+
+            // Dessiner le rectangle englobant
+            Rectangle spaceshipRect = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
+            using (Pen pen = new Pen(Color.Yellow, 2))  // Couleur jaune pour le rectangle, épaisseur de 2
+            {
+                graphics.DrawRectangle(pen, spaceshipRect);
+            }
+        }
+        */
     }
 
     class PlayerSpaceShip : SpaceShip
@@ -88,7 +103,8 @@ namespace SpaceInvaders.GameObjects
                 Shoot();
 
             }
-            //Console.WriteLine($"Position X: {Position.x}, Limite: {gameSize.Width - Image.Width}");
         }
+
+
     }
 }

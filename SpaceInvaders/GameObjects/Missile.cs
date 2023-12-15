@@ -11,19 +11,15 @@ namespace SpaceInvaders.GameObjects
     public class Missile : SimpleObject
     {
         private double vitesse;
-        public Vecteur2D LastPosition { get; private set; }
-
         public Missile(Vecteur2D position,Bitmap Image, int vies, Side side)
            : base(position, Image, vies, side)
         {
-            this.vitesse = 10.0;
+            this.vitesse = 20.0;
             this.Image = Image;
         }
 
         public override void Update(Keys key, Size gameSize)
         {
-            LastPosition = new Vecteur2D(Position.x, Position.y);
-
             if(this.ObjectSide == Side.Ally)
             {
                 this.Position.y -= vitesse;
@@ -35,13 +31,15 @@ namespace SpaceInvaders.GameObjects
             else
             {
                 this.Position.y += vitesse;
-                if (this.Position.y > 0)
+                if (Position.y > Form.ActiveForm.Height)
                 {
                     Vies = 0;
                 }
             }
 
         }
+
+        /* Decommenter pour le debug
         // Rectangle englobant pour débugger
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
@@ -56,6 +54,7 @@ namespace SpaceInvaders.GameObjects
             }
             
         }
+        */
 
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {

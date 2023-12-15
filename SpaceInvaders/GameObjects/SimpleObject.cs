@@ -39,66 +39,66 @@ namespace SpaceInvaders.GameObjects
             return Vies > 0;
         }
 
-
-
         public override void Collision(Missile missile)
         {
             if (this.ObjectSide != missile.ObjectSide)
             {
-                Bitmap thisBitmap = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
-                Bitmap missileBitmap = new Bitmap(Resources.projectile, missile.ObjectWidth, missile.ObjectHeight);
+                Bitmap thisBitmap    = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
+                Bitmap missileBitmap = new Bitmap(missile.Image, missile.ObjectWidth, missile.ObjectHeight); // Obtention de l'image du missile
 
-                int nbOfPixelsInCollision = 0;
-
-                Rectangle thisRect = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
+                Rectangle thisRect    = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
                 Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y, missile.ObjectWidth, missile.ObjectHeight);
 
-                Rectangle intersection = Rectangle.Intersect(thisRect, missileRect);
-
-                if (intersection.IsEmpty)
+                if (thisRect.IntersectsWith(missileRect))
                 {
-                    return; // Pas de collision
-                }
-                else { Console.WriteLine("Il y a une collision ! "); }
+                    Console.WriteLine("Il y a une collision !");
+                    // Effectuer la vérification pixel par pixel seulement si les rectangles se chevauchent
+                    int nbOfPixelsInCollision = CheckPixelCollision(thisRect, thisBitmap, missileRect, missileBitmap);
 
-                // Parcourir chaque pixel dans la zone de chevauchement pour effacer les pixels du bunker
-                for (int x = intersection.Left; x < intersection.Right; x++)
-                {
-                    for (int y = intersection.Top; y < intersection.Bottom; y++)
+                    if (nbOfPixelsInCollision > 0)
                     {
-                        int thisRelativeX = x - thisRect.Left;
-                        int thisRelativeY = y - thisRect.Top;
+                        Console.WriteLine( "nbOfPixelsInCollision : "+ nbOfPixelsInCollision);
+                        OnCollision(missile, nbOfPixelsInCollision);
+                    }
+                }
+            }
+        }
 
-                        // Vérifiez que les indices sont dans les limites de l'image du bunker
-                        if (thisRelativeX >= 0 && thisRelativeX < thisBitmap.Width && thisRelativeY >= 0 && thisRelativeY < thisBitmap.Height)
+        private int CheckPixelCollision(Rectangle thisRect, Bitmap thisBitmap, Rectangle missileRect, Bitmap missileBitmap)
+        {
+            int nbOfPixelsInCollision = 0;
+
+            // Calculer l'intersection des deux rectangles
+            Rectangle intersection = Rectangle.Intersect(thisRect, missileRect);
+
+            for (int x = intersection.Left; x < intersection.Right; x++)
+            {
+                for (int y = intersection.Top; y < intersection.Bottom; y++)
+                {
+                    // Calculer les positions relatives des pixels dans les bitmaps de chaque objet
+                    int thisRelativeX = x - thisRect.Left;
+                    int thisRelativeY = y - thisRect.Top;
+                    int missileRelativeX = x - missileRect.Left;
+                    int missileRelativeY = y - missileRect.Top;
+
+                    // Vérifier si les positions sont dans les limites des images
+                    if (thisRelativeX >= 0 && thisRelativeX < thisBitmap.Width && thisRelativeY >= 0 && thisRelativeY < thisBitmap.Height &&
+                        missileRelativeX >= 0 && missileRelativeX < missileBitmap.Width && missileRelativeY >= 0 && missileRelativeY < missileBitmap.Height)
+                    {
+                        // Obtenir les couleurs des pixels à ces positions
+                        Color thisPixelColor = thisBitmap.GetPixel(thisRelativeX, thisRelativeY);
+                        Color missilePixelColor = missileBitmap.GetPixel(missileRelativeX, missileRelativeY);
+
+                        // Vérifier la transparence des pixels
+                        if (thisPixelColor.A > 128 && missilePixelColor.A > 128)
                         {
-                            Color thisPixelColor = thisBitmap.GetPixel(thisRelativeX, thisRelativeY);
-                            if (this is Bunker && thisPixelColor.A > 128) // Vérifiez si le pixel n'est pas transparent
-                            {
-                                Console.WriteLine("thisPixelColor " + thisPixelColor);
-
-                                nbOfPixelsInCollision++;
-                                thisBitmap.SetPixel(thisRelativeX, thisRelativeY, Color.Transparent); // Rendre le pixel transparent
-                                this.Image = thisBitmap;
-                            }
-                            else if (!(this is Bunker) && thisPixelColor.A > 128)
-                            {
-                                Console.WriteLine("thisPixelColor " + thisPixelColor);
-
-                                nbOfPixelsInCollision++;
-
-                            }
+                            nbOfPixelsInCollision++;
                         }
                     }
                 }
-
-                if (nbOfPixelsInCollision > 0)
-                {
-
-                    OnCollision(missile, nbOfPixelsInCollision);
-                }
             }
-           
+
+            return nbOfPixelsInCollision;
         }
 
         protected abstract void OnCollision(Missile missile, int nbOfPixelsInCollision);

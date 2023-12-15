@@ -129,7 +129,7 @@ namespace Space_invaders.GameObjects
 
             foreach (var ship in enemyShips)
             {
-                if (random.NextDouble() <= randomShootProbability * 1)
+                if (random.NextDouble() <= randomShootProbability * 0.8)
                 {
                     ship.Shoot(); 
                 }
@@ -138,15 +138,24 @@ namespace Space_invaders.GameObjects
             // Augmentez randomShootProbability si le bloc descend
             if (Position.y > Position.y+ deplacementVertical) // Remplacez par une condition appropriée
             {
-                randomShootProbability += 0.1; // Ajustez cette valeur pour augmenter la difficulté
+                randomShootProbability += 0.5; // Ajustez cette valeur pour augmenter la difficulté
             }
         }
+
 
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
                 foreach (SpaceShip ship in enemyShips)
                 {
-                    graphics.DrawImage(ship.Image, (float)ship.Position.x, (float)ship.Position.y, ship.ObjectWidth, ship.ObjectHeight);
+                /* Decommenter pour le debug
+                // Dessiner le rectangle englobant
+                Rectangle shipRect = new Rectangle((int)ship.Position.x, (int)ship.Position.y, ship.ObjectWidth, ship.ObjectHeight);
+                using (Pen pen = new Pen(Color.Yellow, 2))  // Couleur jaune pour le rectangle, épaisseur de 2
+                {
+                    graphics.DrawRectangle(pen, shipRect);
+                }
+                */
+                graphics.DrawImage(ship.Image, (float)ship.Position.x, (float)ship.Position.y, ship.ObjectWidth, ship.ObjectHeight);
                 }
         }
 
@@ -158,28 +167,40 @@ namespace Space_invaders.GameObjects
 
         public override void Collision(Missile missile)
         {
-            Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y, missile.ObjectWidth, missile.ObjectHeight);
-            Rectangle blockRect   = new Rectangle((int)Position.x, (int)Position.y, size.Width, size.Height);
+            // Créer un rectangle englobant pour le missile
+            Rectangle missileRect = new Rectangle(
+                (int)missile.Position.x,
+                (int)missile.Position.y,
+                missile.ObjectWidth,
+                missile.ObjectHeight);
 
-            // Vérifiez d'abord si le missile intersecte avec le rectangle du bloc ennemi
-            if (missileRect.IntersectsWith(blockRect))
+            // Ensemble pour enregistrer les vaisseaux à supprimer
+            HashSet<SpaceShip> toRemove = new HashSet<SpaceShip>();
+
+            // Itérer sur chaque vaisseau ennemi pour vérifier la collision
+            foreach (var vaisseau in enemyShips)
             {
-                HashSet<SpaceShip> toRemove = new HashSet<SpaceShip>();
+                // Créer un rectangle englobant pour le vaisseau ennemi
+                Rectangle shipRect = new Rectangle((int)vaisseau.Position.x, (int)vaisseau.Position.y, vaisseau.ObjectWidth, vaisseau.ObjectHeight);
 
-                foreach (var vaisseau in enemyShips)
+                // Vérifier si les rectangles se chevauchent
+                if (missileRect.IntersectsWith(shipRect))
                 {
-                    vaisseau?.Collision(missile);
+                    // Si il y a une collision, appeler la méthode Collision du vaisseau
+                    vaisseau.Collision(missile);
+
+                    // Vérifier si le vaisseau est toujours en vie après la collision
                     if (!vaisseau.IsAlive())
                     {
                         toRemove.Add(vaisseau);
                     }
                 }
+            }
 
-                // Retirez les vaisseaux détruits
-                foreach (var vaisseau in toRemove)
-                {
-                    enemyShips.Remove(vaisseau);
-                }
+            // Retirer les vaisseaux détruits de l'ensemble des vaisseaux ennemis
+            foreach (var vaisseau in toRemove)
+            {
+                enemyShips.Remove(vaisseau);
             }
         }
 
