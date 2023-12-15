@@ -1,4 +1,4 @@
-﻿using Space_invaders.Properties;
+﻿using SpaceInvaders.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

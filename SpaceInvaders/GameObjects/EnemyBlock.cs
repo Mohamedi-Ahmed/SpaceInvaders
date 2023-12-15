@@ -1,4 +1,4 @@
-﻿using Space_invaders.Properties;
+﻿using SpaceInvaders.Properties;
 using SpaceInvaders;
 using SpaceInvaders.GameObjects;
 using System;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Space_invaders.GameObjects
+namespace SpaceInvaders.GameObjects
 {
     public class EnemyBlock : GameObject
     {

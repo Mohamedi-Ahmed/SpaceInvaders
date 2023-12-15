@@ -1,5 +1,5 @@
-﻿using Space_invaders.GameObjects;
-using Space_invaders.Properties;
+﻿using SpaceInvaders.GameObjects;
+using SpaceInvaders.Properties;
 using System;
 using System.Drawing;
 using System.Reflection;

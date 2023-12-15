@@ -3,10 +3,9 @@ using SpaceInvaders.GameObjects;
 using System.Windows.Forms;
 using System.Drawing;
 using SpaceInvaders;
-using Space_invaders.GameObjects;
 using System.Linq;
 using System.Collections.Generic;
-using Space_invaders.Properties;
+using SpaceInvaders.Properties;
 using System.Reflection;
 
 namespace SpaceInvaders

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Space_invaders.Properties;
+using SpaceInvaders.Properties;
 
 namespace SpaceInvaders.GameObjects
 {

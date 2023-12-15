@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Space_invaders.Properties;
+using SpaceInvaders.Properties;
 using SpaceInvaders;
 using SpaceInvaders.GameObjects;
 
-namespace Space_invaders.GameObjects
+namespace SpaceInvaders.GameObjects
 {
     internal class Bunker : SimpleObject
     {
