@@ -13,6 +13,8 @@ namespace SpaceInvaders
 
     public abstract class GameObject
     {
+        public int ObjectWidth { get; set; }
+        public int ObjectHeight { get; set; }
         public abstract void Draw(Graphics graphics, int largeur, int hauteur);
         public abstract bool IsAlive();
         public abstract void Update(Keys key, Size gameSize);
@@ -22,6 +24,8 @@ namespace SpaceInvaders
         public GameObject(Side objectSide)
         {
             ObjectSide = objectSide;
+            ObjectWidth = ObjectWidth;
+            ObjectHeight = ObjectHeight;
         }
     }
 }

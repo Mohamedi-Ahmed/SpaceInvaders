@@ -8,10 +8,6 @@ namespace SpaceInvaders
 {
     public partial class gameInstance : Form
     {
-        // Mes labels
-        private Label labelScore;
-        private Label labelVies;
-
         // Mes boutons
         private Button BoutonCommencer;
 
@@ -80,27 +76,6 @@ namespace SpaceInvaders
 
             // A FAIRE ! : MODIFIER L'ICONE + BACKGROUND COLOR + AJOUTER UN ECRAN D ACCEUIL
 
-            // Labels
-            labelScore = new Label
-            {
-                Text = "Score: 0",
-                AutoSize = true,
-                Location = new Point(10, 10)
-            };
-
-            labelVies = new Label
-            {
-                Text = "Vie : 3",
-                AutoSize = true
-            };
-
-            // Ajout des labels au Form
-            this.Controls.Add(labelScore);
-            this.Controls.Add(labelVies);
-
-            // Positionner le labelVies après son ajout au Form
-            PositionLabelInTopRightCorner();
-
             // Boutons
             /*
             BoutonCommencer = new Button
@@ -112,19 +87,6 @@ namespace SpaceInvaders
                                                  this.ClientSize.Height / 2 - BoutonCommencer.Height / 2);
             this.Controls.Add(BoutonCommencer);
             */
-        }
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            PositionLabelInTopRightCorner();
-        }
-
-        private void PositionLabelInTopRightCorner()
-        {
-            if (labelVies != null)
-            {
-                labelVies.Location = new Point(this.ClientSize.Width - labelVies.Width - 10, 10);
-            }
         }
 
         private void gameInstance_Paint(object sender, PaintEventArgs e)

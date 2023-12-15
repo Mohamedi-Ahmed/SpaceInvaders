@@ -10,8 +10,6 @@ namespace SpaceInvaders.GameObjects
     {
         // Position du joueur (si image -> coordonnees x,y de l'angle supérieur gauche de l'image)
         public Vecteur2D Position { get; set; }
-        public int ObjectWidth { get; set; }
-        public int ObjectHeight { get; set; }
         // Propriété publique pour le nombre de vies
         public int Vies { get; set; }
 

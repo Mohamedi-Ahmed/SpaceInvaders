@@ -104,7 +104,24 @@ namespace SpaceInvaders.GameObjects
 
             }
         }
+        public override void Draw(Graphics graphics, int largeur, int hauteur)
+        {
+            base.Draw(graphics, largeur, hauteur); // Dessiner le sprite du vaisseau
 
+            // Appel de la méthode pour dessiner le nombre de vies
+            DrawLives(graphics);
+        }
+        private void DrawLives(Graphics graphics)
+        {
+            // Position et style du texte
+            PointF positionTexte = new PointF(10, 10); // Position au-dessus du vaisseau
+            using (Font font = new Font("Arial", 14))
+            using (SolidBrush brush = new SolidBrush(Color.White))
+            {
+                string texteVies = $"Vies : {this.Vies}";
+                graphics.DrawString(texteVies, font, brush, positionTexte);
+            }
+        }
 
     }
 }
