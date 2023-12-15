@@ -41,8 +41,7 @@
             this.DoubleBuffered = true;
             this.Name = "gameInstance";
             this.Text = "gameInstance";
-            this.Load += new System.EventHandler(this.gameInstance_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gameInstance_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(gameInstance_KeyDown);
             this.ResumeLayout(false);
 
         }

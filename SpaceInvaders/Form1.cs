@@ -8,14 +8,11 @@ namespace SpaceInvaders
 {
     public partial class gameInstance : Form
     {
-        // Mes boutons
-        private Button BoutonCommencer;
-
-        // Mon jeu
+        // Variables et collections
         private Game game ;
         public static HashSet<GameObject> ObjetsDuJeu { get; set; }
 
-        // Mes dimensions images
+        // Dimensions images
           // Missile
         public static int largeurImageMissile = 20;
         public static int hauteurImageMissile = 40;
@@ -32,37 +29,39 @@ namespace SpaceInvaders
         public static int largeurImageGrandEnnemie = 150;
         public static int hauteurImageGrandEnnemie = 100;
 
-        private int keyPressCount = 0;
+
         public gameInstance()
         {
             InitializeComponent();
-            //debug
-            Console.WriteLine("Debut | Compteur: " + keyPressCount);
 
-            //Mes objets 
+            // Initialisation et configuration de base du formulaire
+            ConfigureForm();
+
             ObjetsDuJeu = new HashSet<GameObject>();
+            // Initialisation du jeu
+            game = new Game(this.Width, this.Height);
+            game.Run(); // Démarrer la boucle de jeu
 
-            // Connexion la méthode "gameInstance_Paint" à l'evenement Paint 
-            this.Paint += new PaintEventHandler(gameInstance_Paint);
+            // Liaison de l'événement de clavier pour KeyDown
+            this.KeyDown += new KeyEventHandler(this.gameInstance_KeyDown);
+            this.KeyUp += new KeyEventHandler(game.OnKeyUp); // Ajoutez cette ligne
 
-            // Suppression du double abonnement
-            this.KeyDown -= gameInstance_KeyDown;
-            // Connexion la méthode "BoutonDeplacement" à l'evenement Key 
-            this.KeyDown += new KeyEventHandler(gameInstance_KeyDown);
+        }
 
 
+        private void ConfigureForm()
+        {
             // Désactiver le redimensionnement
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Modifier l'image de fond
-            this.BackgroundImage = Resources.fond_2;
+            this.BackgroundImage = Resources.fond_2; // Assurez-vous que Resources.fond_2 est correct
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             // Centrer l'écran de jeu
             this.StartPosition = FormStartPosition.CenterScreen;
-            
-            // Modifier la taille de la fenêtre de jeu
 
+            // Modifier la taille de la fenêtre de jeu
             StartPosition = FormStartPosition.Manual;
             Rectangle screen = Screen.FromPoint(Cursor.Position).WorkingArea;
             int w = Width >= screen.Width ? screen.Width : (screen.Width + Width) / 2;
@@ -70,23 +69,19 @@ namespace SpaceInvaders
             Location = new Point(screen.Left + (screen.Width - w) / 2, screen.Top + (screen.Height - h) / 2);
             Size = new Size(w, h);
 
+            // Connexion la méthode "gameInstance_Paint" à l'evenement Paint 
+            this.Paint += new PaintEventHandler(gameInstance_Paint);
 
             // Modifier le titre de l'écran de jeu
             this.Text = "SPACE INVADERS !";
+        }
 
-            // A FAIRE ! : MODIFIER L'ICONE + BACKGROUND COLOR + AJOUTER UN ECRAN D ACCEUIL
+        private void gameInstance_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Gérer les touches ici...
+            // Par exemple, transmettre la touche appuyée au jeu :
+            game.OnKeyDown(sender, e);
 
-            // Boutons
-            /*
-            BoutonCommencer = new Button
-            {
-                Text = "Commencer",
-                AutoSize = true,
-            };
-            BoutonCommencer.Location = new Point(this.ClientSize.Width  / 2 - BoutonCommencer.Width / 2,
-                                                 this.ClientSize.Height / 2 - BoutonCommencer.Height / 2);
-            this.Controls.Add(BoutonCommencer);
-            */
         }
 
         private void gameInstance_Paint(object sender, PaintEventArgs e)
@@ -94,30 +89,12 @@ namespace SpaceInvaders
                 game.Draw(e.Graphics);   
         }
 
-
-        private void gameInstance_KeyDown(object sender, KeyEventArgs e)
+            static void Main(string[] args)
         {
-            keyPressCount++;
-            Console.WriteLine("Touche pressée: " + e.KeyCode + " | Compteur: " + keyPressCount);
-            game.Update(e.KeyCode, this.ClientSize);
-            this.Invalidate(); // Ceci demandera le redessin du formulaire
-        }
-
-
-
-        private void gameInstance_Load(object sender, EventArgs e)
-        {
-            game = new Game(this.Width, this.Height);
-        }
-
-        static void Main(string[] args)
-        {
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            // Remplacez 'MonFormulaire' par le nom de votre classe de formulaire
             Application.Run(new gameInstance());
         }
+
     }
 }

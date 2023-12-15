@@ -38,6 +38,11 @@ namespace SpaceInvaders.GameObjects
             }
 
         }
+        protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
+        {
+            this.Vies = 0;
+            missile.Vies = 0;
+        }
 
         /* Decommenter pour le debug
         // Rectangle englobant pour débugger
@@ -55,13 +60,6 @@ namespace SpaceInvaders.GameObjects
             
         }
         */
-
-        protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
-        {
-            this.Vies    = 0;
-            missile.Vies = 0; 
-        }
-
     }
     
 }

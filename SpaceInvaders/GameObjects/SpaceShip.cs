@@ -23,6 +23,8 @@ namespace SpaceInvaders.GameObjects
 
         public void Shoot()
         {
+            Console.WriteLine("Jai ajouté un missile ! " + this.ObjectSide);
+
             if (missile == null || !missile.IsAlive())
             {
                 // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau
@@ -59,10 +61,6 @@ namespace SpaceInvaders.GameObjects
             this.Vies -= 1; 
             missile.Vies = 0; 
         }
-
-
-
-
         /* Decommenter pour le debug
         // Rectangle englobant pour débugger
         public override void Draw(Graphics graphics, int largeur, int hauteur)
