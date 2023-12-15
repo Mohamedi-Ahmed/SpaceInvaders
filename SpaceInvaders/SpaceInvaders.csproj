@@ -90,6 +90,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Resources\alien_pink.png" />
+    <Content Include="Resources\alien_red.png" />
+    <Content Include="Resources\alien_white.png" />
     <None Include="Resources\bunker.png" />
     <None Include="Resources\bullet_enemies.png" />
     <None Include="Resources\alien_noir.png" />
