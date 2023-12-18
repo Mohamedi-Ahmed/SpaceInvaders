@@ -41,7 +41,6 @@
             this.DoubleBuffered = true;
             this.Name = "gameInstance";
             this.Text = "gameInstance";
-            this.Load += new System.EventHandler(this.gameInstance_Load);
             this.ResumeLayout(false);
 
         }

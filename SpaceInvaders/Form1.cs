@@ -87,10 +87,5 @@ namespace SpaceInvaders
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new gameInstance());
         }
-
-        private void gameInstance_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }
