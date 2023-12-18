@@ -17,7 +17,7 @@ namespace SpaceInvaders
         public int ObjectHeight { get; set; }
         public abstract void Draw(Graphics graphics, int largeur, int hauteur);
         public abstract bool IsAlive();
-        public abstract void Update(Keys key, Size gameSize);
+        public abstract void Update(HashSet<Keys> pressedKeys, Size gameSize);
         public abstract void Collision(Missile m);
 
         public Side ObjectSide { get; private set; }

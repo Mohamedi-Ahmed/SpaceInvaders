@@ -10,10 +10,7 @@ namespace SpaceInvaders.GameObjects
     {
         // Position du joueur (si image -> coordonnees x,y de l'angle supérieur gauche de l'image)
         public Vecteur2D Position { get; set; }
-        // Propriété publique pour le nombre de vies
         public int Vies { get; set; }
-
-        // Propriété  pour l'image de l'objet
         public Bitmap Image { get; set; }
 
         protected SimpleObject(Vecteur2D position, Bitmap image, int vies, Side side) : base(side)
@@ -49,13 +46,11 @@ namespace SpaceInvaders.GameObjects
 
                 if (thisRect.IntersectsWith(missileRect))
                 {
-                    Console.WriteLine("Il y a une collision !");
                     // Effectuer la vérification pixel par pixel seulement si les rectangles se chevauchent
                     int nbOfPixelsInCollision = CheckPixelCollision(thisRect, thisBitmap, missileRect, missileBitmap);
 
                     if (nbOfPixelsInCollision > 0)
                     {
-                        Console.WriteLine( "nbOfPixelsInCollision : "+ nbOfPixelsInCollision);
                         OnCollision(missile, nbOfPixelsInCollision);
                     }
                 }

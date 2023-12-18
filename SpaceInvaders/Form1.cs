@@ -43,7 +43,7 @@ namespace SpaceInvaders
             game.Run(); // Démarrer la boucle de jeu
 
             // Liaison de l'événement de clavier pour KeyDown
-            this.KeyDown += new KeyEventHandler(this.gameInstance_KeyDown);
+            this.KeyDown += new KeyEventHandler(game.OnKeyDown);
             this.KeyUp += new KeyEventHandler(game.OnKeyUp); // Ajoutez cette ligne
 
         }
@@ -76,14 +76,6 @@ namespace SpaceInvaders
             this.Text = "SPACE INVADERS !";
         }
 
-        private void gameInstance_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Gérer les touches ici...
-            // Par exemple, transmettre la touche appuyée au jeu :
-            game.OnKeyDown(sender, e);
-
-        }
-
         private void gameInstance_Paint(object sender, PaintEventArgs e)
         {
                 game.Draw(e.Graphics);   
@@ -96,5 +88,9 @@ namespace SpaceInvaders
             Application.Run(new gameInstance());
         }
 
+        private void gameInstance_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

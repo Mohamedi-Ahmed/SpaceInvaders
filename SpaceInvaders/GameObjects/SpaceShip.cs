@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SpaceInvaders.Properties;
@@ -14,7 +15,7 @@ namespace SpaceInvaders.GameObjects
             : base(position_initiale, image, vies_initiales, side)
         {
         }
-        public override void Update(Keys key, Size gameSize)
+        public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
         }
 
@@ -23,8 +24,6 @@ namespace SpaceInvaders.GameObjects
 
         public void Shoot()
         {
-            Console.WriteLine("Jai ajouté un missile ! " + this.ObjectSide);
-
             if (missile == null || !missile.IsAlive())
             {
                 // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau
@@ -86,20 +85,15 @@ namespace SpaceInvaders.GameObjects
         public PlayerSpaceShip(Vecteur2D position_initiale, int vies_initiales, Side side) 
             : base(position_initiale, Resources.joueur, vies_initiales, side) { }   
 
-        public override void Update(Keys key, Size gameSize)
+        public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
-            if (key == Keys.Left)
+            if (pressedKeys.Contains(Keys.Left))
             {
                 Position.x = Math.Max(0 + -17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
             }
-            else if (key == Keys.Right)
+            else if (pressedKeys.Contains(Keys.Right))
             {
                 Position.x = Math.Min(gameSize.Width - gameInstance.largeurImageSpaceShip + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
-            }
-            else if (key == Keys.Space)
-            {
-                Shoot();
-
             }
         }
         public override void Draw(Graphics graphics, int largeur, int hauteur)

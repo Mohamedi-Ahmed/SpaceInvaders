@@ -12,19 +12,19 @@ namespace SpaceInvaders
     {
         // Mes variables de jeu
         private GameState state;
-        private HashSet<GameObject> ObjetsDuJeu;
         private Keys currentKey = Keys.None;
         private Size currentScreenSize;
         private SpaceShip playerShip;
         private EnemyBlock enemies;
         private Bunker bunker;
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
+        private HashSet<Keys> pressedKeys = new HashSet<Keys>();
 
         public Game(int Width, int Height)
         {
             currentScreenSize = new Size(Width, Height);
-            ObjetsDuJeu = new HashSet<GameObject>();
             InitializeGame(Width, Height);
+
         }
 
         private void InitializeGame(int Width, int Height)
@@ -42,7 +42,7 @@ namespace SpaceInvaders
             };
 
             // Ajoutez le vaisseau à la liste des objets du jeu
-            ObjetsDuJeu.Add(playerShip);
+            gameInstance.ObjetsDuJeu.Add(playerShip);
 
             //Creation de 3 bunkers
             int nbBunkers = 3;
@@ -61,7 +61,7 @@ namespace SpaceInvaders
                     ObjectWidth = gameInstance.largeurImageBunker,
                     ObjectHeight = gameInstance.hauteurImageBunker
                 };
-                ObjetsDuJeu.Add(bunker);
+                gameInstance.ObjetsDuJeu.Add(bunker);
 
             }
 
@@ -73,46 +73,22 @@ namespace SpaceInvaders
             enemies.AddLine(8, 1, Resources.alien_jaune, false);
 
             //A la fin
-            ObjetsDuJeu.Add(enemies);
+            gameInstance.ObjetsDuJeu.Add(enemies);
         }
 
-        public void Update(Keys key, Size screenSize)
+        public void Update(Size screenSize)
         {
-            // Gestion de la pause
-            if (key == Keys.P)
-            {
-                state = (state == GameState.Play) ? GameState.Pause : GameState.Play;
-            }
-
             if (state == GameState.Play)
             {
-                HandlePlayerInput(key);
-
-                foreach (var gameObject in ObjetsDuJeu.ToList())
+                foreach (var gameObject in gameInstance.ObjetsDuJeu.ToList())
                 {
-                    gameObject.Update(key, screenSize);
+                    gameObject.Update(pressedKeys, screenSize);
                 }
 
                 HandleCollisions();
                 CheckEndGameConditions();
             }
         }
-        private void HandlePlayerInput(Keys key)
-        {
-            // Gestion de la pause
-            if (key == Keys.P)
-            {
-                if (state == GameState.Play)
-                {
-                    state = GameState.Pause;
-                }
-                else if (state == GameState.Pause)
-                {
-                    state = GameState.Play;
-                }
-            }
-        }
-
         private void CheckEndGameConditions()
         {
                 // Vérifier si le joueur est mort
@@ -136,19 +112,19 @@ namespace SpaceInvaders
 
         private void HandleCollisions()
         {
-            foreach (var missile in ObjetsDuJeu.OfType<Missile>())
+            foreach (var missile in gameInstance.ObjetsDuJeu.OfType<Missile>())
             {
                 // Collision avec le vaisseau du joueur
                 playerShip.Collision(missile);
 
                 // Collision avec les bunkers
-                foreach (var bunker in ObjetsDuJeu.OfType<Bunker>())
+                foreach (var bunker in gameInstance.ObjetsDuJeu.OfType<Bunker>())
                 {
                     bunker.Collision(missile);
                 }
 
                 // Collision avec les ennemis
-                foreach (var enemy in ObjetsDuJeu.OfType<EnemyBlock>())
+                foreach (var enemy in gameInstance.ObjetsDuJeu.OfType<EnemyBlock>())
                 {
                     enemy.Collision(missile);
                 }
@@ -164,12 +140,13 @@ namespace SpaceInvaders
             graphics.DrawString(message, font, Brushes.White, positionTexte);
         }
 
+
         public void Draw(Graphics graphics)
         {
             switch (state)
             {
                 case GameState.Play:
-                    var tempObjetsDuJeu = new List<GameObject>(ObjetsDuJeu);
+                    var tempObjetsDuJeu = new List<GameObject>(gameInstance.ObjetsDuJeu);
 
                     // Dessinez ici les éléments du jeu
                     foreach (var objet in tempObjetsDuJeu)
@@ -217,26 +194,39 @@ namespace SpaceInvaders
             gameTimer.Start();
         }
 
-        // Gestionnaires d'événements pour les touches
         public void OnKeyDown(object sender, KeyEventArgs e)
         {
-            currentKey = e.KeyCode;
+            Console.WriteLine($"KeyDown: {e.KeyCode}");
+
+            if (e.KeyCode == Keys.P)
+            {
+                // Basculer entre les états de jeu et de pause
+                state = (state == GameState.Play) ? GameState.Pause : GameState.Play;
+            }
+            else
+            {
+                pressedKeys.Add(e.KeyCode);
+            }
         }
+
         public void OnKeyUp(object sender, KeyEventArgs e)
         {
+            Console.WriteLine($"KeyUp: {e.KeyCode}");
+
+            pressedKeys.Remove(e.KeyCode);
             if (e.KeyCode == Keys.Space)
             {
-                // Appeler la méthode Shoot du vaisseau si la touche espace est relâchée
                 playerShip.Shoot();
             }
         }
         private void GameLoop()
         {
             // Logique de mise à jour
-            Update(currentKey, currentScreenSize);
+            Update(currentScreenSize);
 
+            //Lorsque je quitte le form en cours d'exe ==> error
             // Demande de redessiner le formulaire
-            gameInstance.ActiveForm?.Invalidate();
+            gameInstance.ActiveForm.Invalidate();
         }
     }
 }

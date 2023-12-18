@@ -68,7 +68,6 @@
     <Compile Include="GameObjects\SpaceShip.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="GameObjects\BalleQuiTombe.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

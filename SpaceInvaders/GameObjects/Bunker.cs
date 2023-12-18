@@ -4,13 +4,14 @@ using System.Windows.Forms;
 using SpaceInvaders.Properties;
 using SpaceInvaders;
 using SpaceInvaders.GameObjects;
+using System.Collections.Generic;
 
 namespace SpaceInvaders.GameObjects
 {
     internal class Bunker : SimpleObject
     {
         public Bunker(Vecteur2D position_initiale, Side side): base(position_initiale, Resources.bunker, 1, side){   }
-        public override void Update(Keys key, Size gameSize)
+        public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
             // Ne fais rien !
         }

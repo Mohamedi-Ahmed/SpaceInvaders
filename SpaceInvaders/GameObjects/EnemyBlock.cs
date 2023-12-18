@@ -93,15 +93,14 @@ namespace SpaceInvaders.GameObjects
         }
 
 
-        double vitesseHorizontale = 5.0;
+        double vitesseHorizontale = 1.5;
         int deplacementVertical = 10;
-        double incrementVitesse = 0.5;
-        public override void Update(Keys key, Size gameSize)
+        double incrementVitesse = 0.2;
+        public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
             bool changeDirection = false;
 
-            //Console.WriteLine($"Position.x  : {Position.x} -Form.ActiveForm.Width : {-Form.ActiveForm.Width} || size.Width : {size.Width}");
-            if (Position.x  <= -Form.ActiveForm.Width || Position.x  >= size.Width)
+            if (Position.x  <= -size.Width || Position.x  >= size.Width)
             {
                 // Inverser la direction
                 vitesseHorizontale *= - 1;
@@ -129,7 +128,7 @@ namespace SpaceInvaders.GameObjects
 
             foreach (var ship in enemyShips)
             {
-                if (random.NextDouble() <= randomShootProbability * 0.8)
+                if (random.NextDouble() <= randomShootProbability * 0.4)
                 {
                     ship.Shoot(); 
                 }

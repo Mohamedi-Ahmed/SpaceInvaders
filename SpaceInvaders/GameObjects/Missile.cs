@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +15,11 @@ namespace SpaceInvaders.GameObjects
         public Missile(Vecteur2D position,Bitmap Image, int vies, Side side)
            : base(position, Image, vies, side)
         {
-            this.vitesse = 20.0;
+            this.vitesse = 10.0;
             this.Image = Image;
         }
 
-        public override void Update(Keys key, Size gameSize)
+        public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
             if(this.ObjectSide == Side.Ally)
             {
@@ -36,6 +37,11 @@ namespace SpaceInvaders.GameObjects
                     Vies = 0;
                 }
             }
+            if (!this.IsAlive())
+            {
+                // Retirer le missile de la liste d'objets si ce n'est pas déjà fait
+                gameInstance.ObjetsDuJeu.Remove(this);
+            }
 
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
@@ -44,7 +50,7 @@ namespace SpaceInvaders.GameObjects
             missile.Vies = 0;
         }
 
-        /* Decommenter pour le debug
+        /* //Decommenter pour le debug
         // Rectangle englobant pour débugger
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {
@@ -60,6 +66,9 @@ namespace SpaceInvaders.GameObjects
             
         }
         */
+
     }
+
+
     
 }
