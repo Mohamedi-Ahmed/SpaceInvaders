@@ -16,6 +16,7 @@ namespace SpaceInvaders
         private SpaceShip playerShip;
         private EnemyBlock enemies;
         private Bunker bunker;
+        private Timer gameTimer;
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
         private readonly HashSet<Keys> pressedKeys = new HashSet<Keys>();
 
@@ -30,37 +31,37 @@ namespace SpaceInvaders
         {
             state = GameState.Play;
 
-            int positionXVaisseau = (Width - gameInstance.largeurImageSpaceShip) / 2;
-            int positionYVaisseau = Height - gameInstance.hauteurImageSpaceShip;
+            int positionXVaisseau = (Width - gameInstance.spaceShipImageWidth) / 2;
+            int positionYVaisseau = Height - gameInstance.spaceShipImageHeight;
 
             // Creation du vaisseau
             playerShip = new PlayerSpaceShip(new Vecteur2D(positionXVaisseau, positionYVaisseau), 3, Side.Ally)
             {
-                ObjectWidth = gameInstance.largeurImageSpaceShip,
-                ObjectHeight = gameInstance.hauteurImageSpaceShip
+                ObjectWidth  = gameInstance.spaceShipImageWidth,
+                ObjectHeight = gameInstance.spaceShipImageHeight
             };
 
             // Ajoutez le vaisseau à la liste des objets du jeu
-            gameInstance.ObjetsDuJeu.Add(playerShip);
+            gameInstance.GameObjects.Add(playerShip);
 
             //Creation de 3 bunkers
             int nbBunkers = 3;
             int espaceEntreBunkers = 300; // Espace entre les bunkers
-            int margeBas = gameInstance.hauteurImageSpaceShip + 50; // Marge entre le bunker et le bas de la fenêtre
-            int largeurTotaleBunkers = gameInstance.largeurImageBunker * 3 + espaceEntreBunkers * 2;
+            int margeBas = gameInstance.spaceShipImageHeight + 50; // Marge entre le bunker et le bas de la fenêtre
+            int largeurTotaleBunkers = gameInstance.bunkerImageWidth * 3 + espaceEntreBunkers * 2;
             int margeLaterale = (Width - largeurTotaleBunkers) / 2;
             margeLaterale = Math.Max(margeLaterale, 0);
 
             for (int i = 0; i < nbBunkers; i++)
             {
-                double x = margeLaterale + i * (gameInstance.largeurImageBunker + espaceEntreBunkers);
-                double y = Height - gameInstance.hauteurImageBunker - margeBas;
+                double x = margeLaterale + i * (gameInstance.bunkerImageWidth + espaceEntreBunkers);
+                double y = Height - gameInstance.bunkerImageHeight - margeBas;
                 bunker = new Bunker(new Vecteur2D(x, y), Side.Neutral)
                 {
-                    ObjectWidth  = gameInstance.largeurImageBunker,
-                    ObjectHeight = gameInstance.hauteurImageBunker
+                    ObjectWidth  = gameInstance.bunkerImageWidth,
+                    ObjectHeight = gameInstance.bunkerImageHeight
                 };
-                gameInstance.ObjetsDuJeu.Add(bunker);
+                gameInstance.GameObjects.Add(bunker);
 
             }
 
@@ -72,14 +73,14 @@ namespace SpaceInvaders
             enemies.AddLine(8, 1, Resources.alien_jaune, false);
 
             //A la fin
-            gameInstance.ObjetsDuJeu.Add(enemies);
+            gameInstance.GameObjects.Add(enemies);
         }
 
         public void Update(Size screenSize)
         {
             if (state == GameState.Play)
             {
-                foreach (var gameObject in gameInstance.ObjetsDuJeu.ToList())
+                foreach (var gameObject in gameInstance.GameObjects.ToList())
                 {
                     gameObject.Update(pressedKeys, screenSize);
                 }
@@ -104,34 +105,38 @@ namespace SpaceInvaders
             }
         }
 
-
         private void HandleCollisions()
         {
-            foreach (var missile in gameInstance.ObjetsDuJeu.OfType<Missile>())
+            foreach (var missile in gameInstance.GameObjects.OfType<Missile>())
             {
                 // Collision avec le vaisseau du joueur
                 playerShip.Collision(missile);
 
                 // Collision avec les bunkers
-                foreach (var bunker in gameInstance.ObjetsDuJeu.OfType<Bunker>())
+                foreach (var bunker in gameInstance.GameObjects.OfType<Bunker>())
                 {
                     bunker.Collision(missile);
                 }
 
                 // Collision avec les ennemis
-                foreach (var enemy in gameInstance.ObjetsDuJeu.OfType<EnemyBlock>())
+                foreach (var enemy in gameInstance.GameObjects.OfType<EnemyBlock>())
                 {
                     enemy.Collision(missile);
                 }
             }
         }
 
-        private void DrawEndScreen(Graphics graphics, string message)
+        private void DrawScreen(Graphics graphics, string message)
         {
-            // Afficher un message de fin de jeu (Victoire ou Défaite)
             Font font = new Font("Arial", 16);
             SizeF textSize = graphics.MeasureString(message, font);
-            PointF positionTexte = new PointF((Form.ActiveForm.Width - textSize.Width) / 2, (Form.ActiveForm.Height - textSize.Height) / 2);
+            PointF positionTexte = new Point(0, 0);
+
+            if (Form.ActiveForm != null)
+            {
+               positionTexte = new PointF((Form.ActiveForm.Width - textSize.Width) / 2, (Form.ActiveForm.Height - textSize.Height) / 2);
+
+            }
             graphics.DrawString(message, font, Brushes.White, positionTexte);
         }
 
@@ -141,7 +146,7 @@ namespace SpaceInvaders
             switch (state)
             {
                 case GameState.Play:
-                    var tempObjetsDuJeu = new List<GameObject>(gameInstance.ObjetsDuJeu);
+                    var tempObjetsDuJeu = new List<GameObject>(gameInstance.GameObjects);
 
                     // Dessinez ici les éléments du jeu
                     foreach (var objet in tempObjetsDuJeu)
@@ -151,28 +156,18 @@ namespace SpaceInvaders
                     break;
 
                 case GameState.Pause:
-                    string pauseText = "Pause";
-                    Font pauseFont = new Font("Arial", 16);
-                    SizeF textSize = graphics.MeasureString(pauseText, pauseFont);
-
-                    // Calculer le point de départ pour centrer le texte
-                    float x = (Form.ActiveForm.Width - textSize.Width) / 2;
-                    float y = (Form.ActiveForm.Height - textSize.Height) / 2;
-
-                    // Dessiner le texte centré
-                    graphics.DrawString(pauseText, pauseFont, Brushes.White, new PointF(x, y));
+                    DrawScreen(graphics, "Pause !");
                     break;
 
                 case GameState.Win:
-                    DrawEndScreen(graphics, "Victoire !");
+                    DrawScreen(graphics, "Victoire !");
                     break;
 
                 case GameState.Loose:
-                    DrawEndScreen(graphics, "Défaite !");
+                    DrawScreen(graphics, "Défaite !");
                     break;
             }
         }
-
         private void RestartGame(Size screenSize)
         {
             // Réinitialiser le jeu
@@ -189,21 +184,44 @@ namespace SpaceInvaders
             gameTimer.Start();
         }
 
+        public void PauseGame()
+        {
+            if (state != GameState.Pause)
+            {
+                state = GameState.Pause;
+                Console.WriteLine("Jeu mis en pause");
+            }
+        }
+
+        public void ResumeGame()
+        {
+            if (state == GameState.Pause)
+            {
+                state = GameState.Play;
+                Console.WriteLine("Jeu repris");
+            }
+        }
+
         public void OnKeyDown(object sender, KeyEventArgs e)
         {
             Console.WriteLine($"KeyDown: {e.KeyCode}");
 
             if (e.KeyCode == Keys.P)
             {
-                // Basculer entre les états de jeu et de pause
-                state = (state == GameState.Play) ? GameState.Pause : GameState.Play;
-            }
-            else
+                if (state == GameState.Play)
+                {
+                    PauseGame();
+                }
+                else if (state == GameState.Pause)
+                {
+                    ResumeGame();
+                }
+            }else 
             {
+                // Ajoutez la touche appuyée à l'ensemble des touches pressées
                 pressedKeys.Add(e.KeyCode);
             }
         }
-
         public void OnKeyUp(object sender, KeyEventArgs e)
         {
             Console.WriteLine($"KeyUp: {e.KeyCode}");
@@ -216,12 +234,16 @@ namespace SpaceInvaders
         }
         private void GameLoop()
         {
-            // Logique de mise à jour
+            if (state != GameState.Play)
+            {
+                gameInstance.ActiveForm?.Invalidate(); // Force le redessin même en pause
+                return; // Ne rien faire si le jeu est en pause
+            }   
+            // Mise à jour
             Update(currentScreenSize);
 
-            //Lorsque je quitte le form en cours d'exe ==> error
-            // Demande de redessiner le formulaire
-            gameInstance.ActiveForm.Invalidate();
+            // Redessiner le formulaire
+            gameInstance.ActiveForm?.Invalidate();
         }
     }
 }

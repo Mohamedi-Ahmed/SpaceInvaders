@@ -29,9 +29,9 @@ namespace SpaceInvaders.GameObjects
             else
             {
                 this.Position.y += vitesse;
-                if (Position.y > Form.ActiveForm.Height) Vies = 0; 
+                if (Position.y > gameSize.Height) Vies = 0; 
             }
-            if (!this.IsAlive()) gameInstance.ObjetsDuJeu.Remove(this); 
+            if (!this.IsAlive()) gameInstance.GameObjects.Remove(this); 
 
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)

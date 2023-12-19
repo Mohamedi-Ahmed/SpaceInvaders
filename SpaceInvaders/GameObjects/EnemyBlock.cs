@@ -43,8 +43,8 @@ namespace SpaceInvaders.GameObjects
             nbLines++;
 
             // Choisir la taille appropriée en fonction du type d'ennemi
-            int shipWidth  = isBigEnnemy ? gameInstance.largeurImageGrandEnnemie : gameInstance.largeurImagePetitEnnemie;
-            int shipHeight = isBigEnnemy ? gameInstance.hauteurImageGrandEnnemie : gameInstance.hauteurImagePetitEnnemie;
+            int shipWidth  = isBigEnnemy ? gameInstance.bigEnnemyImageWidth  : gameInstance.smallEnnemyImageWidth;
+            int shipHeight = isBigEnnemy ? gameInstance.bigEnnemyImageHeight : gameInstance.smallEnnemyImageHeight;
 
             // Calculer l'espacement entre les vaisseaux
             int totalSpace = baseWidth - nbShips * shipWidth;
@@ -240,7 +240,7 @@ namespace SpaceInvaders.GameObjects
         public bool ReachedPlayerLevel(double playerYPosition)
         {
             // Vérifie si l'un des vaisseaux ennemis a atteint ou est passé sous le niveau y du joueur
-            return enemyShips.Any(ship => ship.Position.y  >= playerYPosition - gameInstance.hauteurImageSpaceShip );
+            return enemyShips.Any(ship => ship.Position.y  >= playerYPosition - gameInstance.spaceShipImageHeight);
         }
 
 
