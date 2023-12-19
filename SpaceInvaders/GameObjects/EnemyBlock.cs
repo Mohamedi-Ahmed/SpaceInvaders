@@ -1,13 +1,7 @@
-﻿using SpaceInvaders.Properties;
-using SpaceInvaders;
-using SpaceInvaders.GameObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SpaceInvaders.GameObjects
@@ -15,20 +9,20 @@ namespace SpaceInvaders.GameObjects
     public class EnemyBlock : GameObject
     {
         // Ensemble des vaisseaux du bloc
-        private HashSet<SpaceShip> enemyShips;
+        private readonly HashSet<SpaceShip> enemyShips;
         // Largeur du bloc à la création
-        private int baseWidth;
+        private readonly int baseWidth;
         // Ajout du champ nbLines
         private int nbLines; 
 
         // Taille du bloc (largeur, hauteur), adaptée au fur et à mesure du jeu.
-        public Size size {get; set;}
+        public Size Size {get; set;}
         // Coin sup. gauche du bloc
-        public Vecteur2D Position { get; set;}
+        public Vector2D Position { get; set;}
 
         private double randomShootProbability;
-        private Random random = new Random();
-        public EnemyBlock(int baseWidth, Vecteur2D position, Side side) : base(side)
+        private readonly Random random = new Random();
+        public EnemyBlock(int baseWidth, Vector2D position, Side side) : base(side)
         {
             this.baseWidth = baseWidth;
             Position = position;
@@ -51,17 +45,6 @@ namespace SpaceInvaders.GameObjects
             int spacing = totalSpace / (nbShips + 1);
             int bottomSpacing = 10;
 
-            // Determiner dimensions du bloc
-            int newWidth = size.Width;
-            int newHeight = size.Height;
-
-            int totalShipsWidth = (nbShips * shipWidth) + (nbShips - 1) * spacing;
-            int totalShipsHeight = nbLines * shipHeight + (nbLines - 1) * bottomSpacing;
-
-            if (newWidth  < totalShipsWidth) {newWidth  = totalShipsWidth; }
-            if (newHeight < totalShipsHeight){newHeight = totalShipsHeight; }
-
-            // Déterminer la position y pour la nouvelle ligne
             // Calculer la position y pour la nouvelle ligne de vaisseaux
             int yPosition = (nbLines - 1) * (shipHeight + bottomSpacing);
 
@@ -72,7 +55,7 @@ namespace SpaceInvaders.GameObjects
                 int xPosition = spacing + i * (shipWidth + spacing);
 
                 // Créer et ajouter un nouveau vaisseau
-                SpaceShip newShip = new SpaceShip(new Vecteur2D(xPosition, yPosition), shipImage, nbLives, Side.Enemy)
+                SpaceShip newShip = new SpaceShip(new Vector2D(xPosition, yPosition), shipImage, nbLives, Side.Enemy)
                 {
                     ObjectWidth  = shipWidth,
                     ObjectHeight = shipHeight
@@ -87,7 +70,7 @@ namespace SpaceInvaders.GameObjects
         {
             if (enemyShips.Count == 0)
             {
-                size = new Size(0, 0);
+                Size = new Size(0, 0);
                 return;
             }
 
@@ -102,43 +85,43 @@ namespace SpaceInvaders.GameObjects
             int newHeight = maxY - minY;
 
             // Mettre à jour la taille du bloc
-            size = new Size(newWidth, newHeight);
+            Size = new Size(newWidth, newHeight);
 
             // Mettre à jour également la position du bloc si nécessaire
-            Position = new Vecteur2D(minX, minY);
+            Position = new Vector2D(minX, minY);
         }
 
 
-        double vitesseHorizontale = 3.0;
-        int deplacementVertical = 10;
-        double incrementVitesse = 0.2;
+        double horizontalSpeed          = 3.0;
+        readonly int verticalMovement   = 10;
+        readonly double speedIncrement  = 0.2;
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
             bool changeDirection = false;
 
-            if (Position.x <= 0 || Position.x + size.Width >= gameSize.Width)
+            if (Position.x <= 0 || Position.x + Size.Width >= gameSize.Width)
             {
-                vitesseHorizontale *= -1;
+                horizontalSpeed *= -1;
                 changeDirection = true;
             }
 
             // Déplacer le bloc horizontalement
-            Position.x += vitesseHorizontale;
+            Position.x += horizontalSpeed;
 
             foreach (var ship in enemyShips)
             {
-                ship.Position.x += vitesseHorizontale; // Déplacer chaque vaisseau horizontalement
+                ship.Position.x += horizontalSpeed; // Déplacer chaque vaisseau horizontalement
 
                 if (changeDirection)
                 {
-                    ship.Position.y += deplacementVertical; // Déplacer verticalement seulement lors du changement de direction
+                    ship.Position.y += verticalMovement; // Déplacer verticalement seulement lors du changement de direction
                 }
             }
 
             if (changeDirection)
             {
-                Position.y += deplacementVertical; // Déplacer le bloc vers le bas une seule fois par changement de direction
-                vitesseHorizontale += Math.Sign(vitesseHorizontale) * incrementVitesse;
+                Position.y += verticalMovement; // Déplacer le bloc vers le bas une seule fois par changement de direction
+                horizontalSpeed += Math.Sign(horizontalSpeed) * speedIncrement;
             }
 
             foreach (var ship in enemyShips)
@@ -150,14 +133,14 @@ namespace SpaceInvaders.GameObjects
             }
 
             // Augmentez randomShootProbability si le bloc descend
-            if (Position.y > Position.y+ deplacementVertical) // Remplacez par une condition appropriée
+            if (Position.y > Position.y+ verticalMovement) // Remplacez par une condition appropriée
             {
                 randomShootProbability += 0.5; // Ajustez cette valeur pour augmenter la difficulté
             }
         }
 
 
-        public override void Draw(Graphics graphics, int largeur, int hauteur)
+        public override void Draw(Graphics graphics, int width, int height)
         {
                 foreach (SpaceShip ship in enemyShips)
                 {
@@ -192,21 +175,21 @@ namespace SpaceInvaders.GameObjects
             HashSet<SpaceShip> toRemove = new HashSet<SpaceShip>();
 
             // Itérer sur chaque vaisseau ennemi pour vérifier la collision
-            foreach (var vaisseau in enemyShips)
+            foreach (var ship in enemyShips)
             {
                 // Créer un rectangle englobant pour le vaisseau ennemi
-                Rectangle shipRect = new Rectangle((int)vaisseau.Position.x, (int)vaisseau.Position.y, vaisseau.ObjectWidth, vaisseau.ObjectHeight);
+                Rectangle shipRect = new Rectangle((int)ship.Position.x, (int)ship.Position.y, ship.ObjectWidth, ship.ObjectHeight);
 
                 // Vérifier si les rectangles se chevauchent
                 if (missileRect.IntersectsWith(shipRect))
                 {
                     // Si il y a une collision, appeler la méthode Collision du vaisseau
-                    vaisseau.Collision(missile);
+                    ship.Collision(missile);
 
                     // Vérifier si le vaisseau est toujours en vie après la collision
-                    if (!vaisseau.IsAlive())
+                    if (!ship.IsAlive())
                     {
-                        toRemove.Add(vaisseau);
+                        toRemove.Add(ship);
                     }
                 }
             }
@@ -233,7 +216,7 @@ namespace SpaceInvaders.GameObjects
                 Position.y = minY;
 
                 // Mettre à jour la taille du bloc
-                size = new Size(maxX - minX, maxY - minY);
+                Size = new Size(maxX - minX, maxY - minY);
             }
         }
 

@@ -73,7 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Vecteur2D.cs" />
+    <Compile Include="Utils\Vector2D.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,14 +115,18 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\alien_pink.png" />
-    <Content Include="Resources\alien_red.png" />
-    <Content Include="Resources\alien_white.png" />
-    <None Include="Resources\bunker.png" />
-    <None Include="Resources\bullet_enemies.png" />
-    <None Include="Resources\alien_noir.png" />
-    <None Include="Resources\alien_jaune.png" />
-    <None Include="Resources\alien_bleu.png" />
+    <None Include="Resources\playerSpaceShip.png" />
+    <None Include="Resources\bg2.png" />
+    <None Include="Resources\bg1.png" />
+    <None Include="Resources\allyBullet.png" />
+    <None Include="Resources\alienBullet.png" />
+    <Content Include="Resources\alienPink.png" />
+    <Content Include="Resources\alienRed.png" />
+    <Content Include="Resources\alienWhite.png" />
+    <None Include="Resources\bunkerSprite.png" />
+    <None Include="Resources\alienBlack.png" />
+    <None Include="Resources\alienYellow.png" />
+    <None Include="Resources\alienBlue.png" />
     <None Include="Properties\alien.png" />
     <Content Include="Properties\fond_1.png" />
     <Content Include="Properties\fond_2.png" />

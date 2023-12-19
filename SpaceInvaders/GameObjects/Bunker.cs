@@ -10,10 +10,9 @@ namespace SpaceInvaders.GameObjects
 {
     internal class Bunker : SimpleObject
     {
-        public Bunker(Vecteur2D position_initiale, Side side): base(position_initiale, Resources.bunker, 1, side){   }
+        public Bunker(Vector2D position_initiale, Side side): base(position_initiale, Resources.bunkerSprite, 1, side){   }
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
-            // Ne fais rien !
         }
 
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
@@ -21,7 +20,7 @@ namespace SpaceInvaders.GameObjects
             Bitmap bunkerBitmap = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
 
             // Définir les rectangles pour les deux objets
-            Rectangle bunkerRect = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
+            Rectangle bunkerRect  = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
             Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y, missile.ObjectWidth, missile.ObjectHeight);
 
             // Calculer l'intersection des deux rectangles
@@ -29,12 +28,12 @@ namespace SpaceInvaders.GameObjects
 
             if (!intersection.IsEmpty)
             {
-                // Parcourir chaque pixel dans la zone de chevauchement
+                // Parcourir chaque pixel dans l'intersection
                 for (int x = intersection.Left; x < intersection.Right; x++)
                 {
                     for (int y = intersection.Top; y < intersection.Bottom; y++)
                     {
-                        // Calculer les positions relatives des pixels dans le bitmap du bunker
+                        // Calculer les positions des pixels dans le bitmap du bunker
                         int bunkerRelativeX = x - bunkerRect.Left;
                         int bunkerRelativeY = y - bunkerRect.Top;
 
@@ -51,7 +50,6 @@ namespace SpaceInvaders.GameObjects
             // Mettre à jour l'image du bunker
             this.Image = bunkerBitmap;
 
-            // Décrémenter les vies du missile
             missile.Vies -= numberOfPixelsInCollision;
         }
 

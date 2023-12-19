@@ -1,37 +1,33 @@
-﻿using SpaceInvaders.GameObjects;
-using SpaceInvaders.Properties;
-using System;
-using System.Drawing;
-using System.Reflection;
+﻿using System.Drawing;
 
 namespace SpaceInvaders.GameObjects
 {
     public abstract class SimpleObject : GameObject
     {
         // Position du joueur (si image -> coordonnees x,y de l'angle supérieur gauche de l'image)
-        public Vecteur2D Position { get; set; }
-        public int Vies { get; set; }
+        public Vector2D Position { get; set; }
+        public int LifePoints { get; set; }
         public Bitmap Image { get; set; }
 
-        protected SimpleObject(Vecteur2D position, Bitmap image, int vies, Side side) : base(side)
+        protected SimpleObject(Vector2D position, Bitmap image, int lifepoints, Side side) : base(side)
         {
             Position = position;
             Image = image;
-            Vies = vies;
+            LifePoints = lifepoints;
 
         }
 
-        public override void Draw(Graphics graphics, int largeur, int hauteur)
+        public override void Draw(Graphics graphics, int width, int height)
         {
             if (Image != null)
             {
-                graphics.DrawImage(Image, (float)Position.x, (float)Position.y, largeur, hauteur);
+                graphics.DrawImage(Image, (float)Position.x, (float)Position.y, width, height);
             }
         }
 
         public override bool IsAlive()
         {
-            return Vies > 0;
+            return LifePoints > 0;
         }
 
         public override void Collision(Missile missile)
@@ -44,9 +40,8 @@ namespace SpaceInvaders.GameObjects
                 if (thisRect.IntersectsWith(missileRect))
                 {
                     Bitmap thisBitmap = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
-                    Bitmap missileBitmap = new Bitmap(missile.Image, missile.ObjectWidth, missile.ObjectHeight); // Obtention de l'image du missile
+                    Bitmap missileBitmap = new Bitmap(missile.Image, missile.ObjectWidth, missile.ObjectHeight);
 
-                    // Effectuer la vérification pixel par pixel seulement si les rectangles se chevauchent
                     int nbOfPixelsInCollision = CheckPixelCollision(thisRect, thisBitmap, missileRect, missileBitmap);
 
                     if (nbOfPixelsInCollision > 0)
@@ -68,18 +63,15 @@ namespace SpaceInvaders.GameObjects
             {
                 for (int y = intersection.Top; y < intersection.Bottom; y++)
                 {
-                    // Calculer les positions relatives des pixels dans les bitmaps de chaque objet
                     int thisRelativeX = x - thisRect.Left;
                     int thisRelativeY = y - thisRect.Top;
                     int missileRelativeX = x - missileRect.Left;
                     int missileRelativeY = y - missileRect.Top;
 
-                    // Vérifier si les positions sont dans les limites des images
                     if (thisRelativeX >= 0 && thisRelativeX < thisBitmap.Width && thisRelativeY >= 0 && thisRelativeY < thisBitmap.Height &&
                         missileRelativeX >= 0 && missileRelativeX < missileBitmap.Width && missileRelativeY >= 0 && missileRelativeY < missileBitmap.Height)
                     {
-                        // Obtenir les couleurs des pixels à ces positions
-                        Color thisPixelColor = thisBitmap.GetPixel(thisRelativeX, thisRelativeY);
+                        Color thisPixelColor    = thisBitmap.GetPixel(thisRelativeX, thisRelativeY);
                         Color missilePixelColor = missileBitmap.GetPixel(missileRelativeX, missileRelativeY);
 
                         // Vérifier la transparence des pixels

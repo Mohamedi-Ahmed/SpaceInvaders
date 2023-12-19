@@ -118,37 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="alien" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>alien.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienBlack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="alien_bleu" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\alien_bleu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienBlue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienBlue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="alien_jaune" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\alien_jaune.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienBullet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienBullet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="alien_noir" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\alien_noir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienPink" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienPink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bullet_enemies" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bullet_enemies.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bunker" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bunker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienWhite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienWhite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="fond_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>fond_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="alienYellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\alienYellow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="fond_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>fond_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="allyBullet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\allyBullet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="fond_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>fond_3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="bg1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bg1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="joueur" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>joueur.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="bg2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bg2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="projectile" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>projectile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="bunkerSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bunkerSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="playerSpaceShip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\playerSpaceShip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

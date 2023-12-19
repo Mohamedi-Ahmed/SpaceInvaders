@@ -51,7 +51,7 @@ namespace SpaceInvaders
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Modifier l'image de fond
-            this.BackgroundImage = Resources.fond_2; // Assurez-vous que Resources.fond_2 est correct
+            this.BackgroundImage = Resources.bg2; // Assurez-vous que Resources.fond_2 est correct
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             // Centrer l'écran de jeu

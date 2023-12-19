@@ -16,7 +16,6 @@ namespace SpaceInvaders
         private SpaceShip playerShip;
         private EnemyBlock enemies;
         private Bunker bunker;
-        private Timer gameTimer;
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
         private readonly HashSet<Keys> pressedKeys = new HashSet<Keys>();
 
@@ -24,18 +23,17 @@ namespace SpaceInvaders
         {
             currentScreenSize = new Size(Width, Height);
             InitializeGame(Width, Height);
-
         }
 
         private void InitializeGame(int Width, int Height)
         {
             state = GameState.Play;
 
-            int positionXVaisseau = (Width - gameInstance.spaceShipImageWidth) / 2;
-            int positionYVaisseau = Height - gameInstance.spaceShipImageHeight;
+            int shipXPosition = (Width - gameInstance.spaceShipImageWidth) / 2;
+            int shipYPosition = Height - gameInstance.spaceShipImageHeight;
 
             // Creation du vaisseau
-            playerShip = new PlayerSpaceShip(new Vecteur2D(positionXVaisseau, positionYVaisseau), 3, Side.Ally)
+            playerShip = new PlayerSpaceShip(new Vector2D(shipXPosition, shipYPosition), 3, Side.Ally)
             {
                 ObjectWidth  = gameInstance.spaceShipImageWidth,
                 ObjectHeight = gameInstance.spaceShipImageHeight
@@ -46,17 +44,17 @@ namespace SpaceInvaders
 
             //Creation de 3 bunkers
             int nbBunkers = 3;
-            int espaceEntreBunkers = 300; // Espace entre les bunkers
-            int margeBas = gameInstance.spaceShipImageHeight + 50; // Marge entre le bunker et le bas de la fenêtre
-            int largeurTotaleBunkers = gameInstance.bunkerImageWidth * 3 + espaceEntreBunkers * 2;
-            int margeLaterale = (Width - largeurTotaleBunkers) / 2;
-            margeLaterale = Math.Max(margeLaterale, 0);
+            int spaceBetweenBunkers = 300; // Espace entre les bunkers
+            int bottomMargin = gameInstance.spaceShipImageHeight + 50; // Marge entre le bunker et le bas de la fenêtre
+            int bunkersTotalWidth = gameInstance.bunkerImageWidth * 3 + spaceBetweenBunkers * 2;
+            int lateralMargin = (Width - bunkersTotalWidth) / 2;
+            _ = Math.Max(lateralMargin, 0);
 
             for (int i = 0; i < nbBunkers; i++)
             {
-                double x = margeLaterale + i * (gameInstance.bunkerImageWidth + espaceEntreBunkers);
-                double y = Height - gameInstance.bunkerImageHeight - margeBas;
-                bunker = new Bunker(new Vecteur2D(x, y), Side.Neutral)
+                double x = lateralMargin + i * (gameInstance.bunkerImageWidth + spaceBetweenBunkers);
+                double y = Height - gameInstance.bunkerImageHeight - bottomMargin;
+                bunker = new Bunker(new Vector2D(x, y), Side.Neutral)
                 {
                     ObjectWidth  = gameInstance.bunkerImageWidth,
                     ObjectHeight = gameInstance.bunkerImageHeight
@@ -66,13 +64,12 @@ namespace SpaceInvaders
             }
 
             // Creation du bloc d'ennemies
-            enemies = new EnemyBlock(Width, new Vecteur2D(0.0, 0.0), Side.Enemy);
+            enemies = new EnemyBlock(Width, new Vector2D(0.0, 0.0), Side.Enemy);
             // Ajout des lignes d'ennemies
-            enemies.AddLine(8, 1, Resources.alien_jaune, false);
-            enemies.AddLine(3, 3, Resources.alien_bleu, true);
-            enemies.AddLine(8, 1, Resources.alien_jaune, false);
+            enemies.AddLine(8, 1, Resources.alienYellow, false);
+            enemies.AddLine(3, 3, Resources.alienBlue  , true );
+            enemies.AddLine(8, 1, Resources.alienYellow, false);
 
-            //A la fin
             gameInstance.GameObjects.Add(enemies);
         }
 
@@ -146,10 +143,10 @@ namespace SpaceInvaders
             switch (state)
             {
                 case GameState.Play:
-                    var tempObjetsDuJeu = new List<GameObject>(gameInstance.GameObjects);
+                    var tempGameObjects = new List<GameObject>(gameInstance.GameObjects);
 
                     // Dessinez ici les éléments du jeu
-                    foreach (var objet in tempObjetsDuJeu)
+                    foreach (var objet in tempGameObjects)
                     {
                         objet.Draw(graphics, objet.ObjectWidth, objet.ObjectHeight);
                     }
@@ -160,11 +157,11 @@ namespace SpaceInvaders
                     break;
 
                 case GameState.Win:
-                    DrawScreen(graphics, "Victoire !");
+                    DrawScreen(graphics, "Victory !");
                     break;
 
                 case GameState.Loose:
-                    DrawScreen(graphics, "Défaite !");
+                    DrawScreen(graphics, "Loose !");
                     break;
             }
         }
@@ -177,7 +174,7 @@ namespace SpaceInvaders
 
         public void Run()
         {
-            Console.WriteLine("Début de la boucle de jeu.");
+            //Console.WriteLine("Début de la boucle de jeu.");
             Timer gameTimer = new Timer();
             gameTimer.Interval = 16; // 60 FPS environ
             gameTimer.Tick += (sender, e) => GameLoop();
@@ -189,7 +186,6 @@ namespace SpaceInvaders
             if (state != GameState.Pause)
             {
                 state = GameState.Pause;
-                Console.WriteLine("Jeu mis en pause");
             }
         }
 
@@ -198,13 +194,12 @@ namespace SpaceInvaders
             if (state == GameState.Pause)
             {
                 state = GameState.Play;
-                Console.WriteLine("Jeu repris");
             }
         }
 
         public void OnKeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine($"KeyDown: {e.KeyCode}");
+            //Console.WriteLine($"KeyDown: {e.KeyCode}");
 
             if (e.KeyCode == Keys.P)
             {
@@ -224,7 +219,7 @@ namespace SpaceInvaders
         }
         public void OnKeyUp(object sender, KeyEventArgs e)
         {
-            Console.WriteLine($"KeyUp: {e.KeyCode}");
+            //Console.WriteLine($"KeyUp: {e.KeyCode}");
 
             pressedKeys.Remove(e.KeyCode);
             if (e.KeyCode == Keys.Space)
@@ -236,7 +231,8 @@ namespace SpaceInvaders
         {
             if (state != GameState.Play)
             {
-                gameInstance.ActiveForm?.Invalidate(); // Force le redessin même en pause
+                // Force le redessin même en pause
+                gameInstance.ActiveForm?.Invalidate(); 
                 return; // Ne rien faire si le jeu est en pause
             }   
             // Mise à jour

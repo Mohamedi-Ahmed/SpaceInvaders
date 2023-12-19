@@ -10,8 +10,8 @@ namespace SpaceInvaders.GameObjects
     class SpaceShip : SimpleObject
     {
         // Constructeur
-        public SpaceShip(Vecteur2D position_initiale, Bitmap image, int vies_initiales, Side side)
-            : base(position_initiale, image, vies_initiales, side)
+        public SpaceShip(Vector2D initialPosition, Bitmap image, int initialLifePoints, Side side)
+            : base(initialPosition, image, initialLifePoints, side)
         {
         }
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
@@ -45,8 +45,8 @@ namespace SpaceInvaders.GameObjects
 
         private void CreateMissile(double x, double y)
         {
-            Bitmap imageMissile = this.ObjectSide == Side.Ally ? Resources.projectile : Resources.bullet_enemies;
-            missile = new Missile(new Vecteur2D(x, y), imageMissile, 1, this.ObjectSide)
+            Bitmap imageMissile = this.ObjectSide == Side.Ally ? Resources.allyBullet : Resources.alienBullet;
+            missile = new Missile(new Vector2D(x, y), imageMissile, 1, this.ObjectSide)
             {
                 ObjectHeight = gameInstance.missileImageHeight,
                 ObjectWidth  = gameInstance.missileImageWidth
@@ -55,8 +55,8 @@ namespace SpaceInvaders.GameObjects
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {
-            this.Vies -= 1; 
-            missile.Vies = 0; 
+            this.LifePoints -= 1; 
+            missile.LifePoints = 0; 
         }
         /* Decommenter pour le debug
         // Rectangle englobant pour débugger
@@ -76,12 +76,11 @@ namespace SpaceInvaders.GameObjects
 
     class PlayerSpaceShip : SpaceShip
     {
-
         // Vitesse du joueur
-        private readonly double VitessePixelParSeconde = 10.0;
+        private readonly double SpeedPixelParSeconde = 10.0;
 
-        public PlayerSpaceShip(Vecteur2D position_initiale, int vies_initiales, Side side) 
-            : base(position_initiale, Resources.joueur, vies_initiales, side) { }   
+        public PlayerSpaceShip(Vector2D initialPosition, int initialLifePoints, Side side) 
+            : base(initialPosition, Resources.playerSpaceShip, initialLifePoints, side) { }   
 
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
@@ -89,11 +88,11 @@ namespace SpaceInvaders.GameObjects
             {
                 if (pressedKeys.Contains(Keys.Left))
                 {
-                    Position.x = Math.Max(0 + -17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
+                    Position.x = Math.Max(0 + -17, Position.x - SpeedPixelParSeconde); // Empêche le vaisseau de sortir à gauche
                 }
                 else if (pressedKeys.Contains(Keys.Right))
                 {
-                    Position.x = Math.Min(gameSize.Width - gameInstance.spaceShipImageWidth + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
+                    Position.x = Math.Min(gameSize.Width - gameInstance.spaceShipImageWidth + 17, Position.x + SpeedPixelParSeconde); // Empêche le vaisseau de sortir à droite
                 }
             }
 
@@ -112,8 +111,8 @@ namespace SpaceInvaders.GameObjects
             using (Font font = new Font("Arial", 14))
             using (SolidBrush brush = new SolidBrush(Color.White))
             {
-                string texteVies = $"Vies : {this.Vies}";
-                graphics.DrawString(texteVies, font, brush, positionTexte);
+                string texteLP = $"Life Points : {this.LifePoints}";
+                graphics.DrawString(texteLP, font, brush, positionTexte);
             }
         }
 

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using SpaceInvaders.Properties;
 
 namespace SpaceInvaders.GameObjects
 {
 
     public class Missile : SimpleObject
     {
-        private double vitesse;
-        public Missile(Vecteur2D position,Bitmap Image, int vies, Side side)
-           : base(position, Image, vies, side)
+        private double speedMissile;
+        public Missile(Vector2D position,Bitmap Image, int lifePoints, Side side)
+           : base(position, Image, lifePoints, side)
         {
-            this.vitesse = 20.0;
+            this.speedMissile = 20.0;
             this.Image = Image;
         }
 
@@ -23,21 +19,21 @@ namespace SpaceInvaders.GameObjects
         {
             if(this.ObjectSide == Side.Ally)
             {
-                this.Position.y -= vitesse;
-                if (this.Position.y < 0) Vies = 0;
+                this.Position.y -= speedMissile;
+                if (this.Position.y < 0) LifePoints = 0;
             }
             else
             {
-                this.Position.y += vitesse;
-                if (Position.y > gameSize.Height) Vies = 0; 
+                this.Position.y += speedMissile;
+                if (Position.y > gameSize.Height) LifePoints = 0; 
             }
             if (!this.IsAlive()) gameInstance.GameObjects.Remove(this); 
 
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {
-            this.Vies = 0;
-            missile.Vies = 0;
+            this.LifePoints = 0;
+            missile.LifePoints = 0;
         }
 
         /* //Decommenter pour le debug
