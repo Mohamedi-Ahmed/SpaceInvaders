@@ -38,14 +38,14 @@ namespace SpaceInvaders.GameObjects
         {
             if (this.ObjectSide != missile.ObjectSide)
             {
-                Bitmap thisBitmap    = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
-                Bitmap missileBitmap = new Bitmap(missile.Image, missile.ObjectWidth, missile.ObjectHeight); // Obtention de l'image du missile
-
                 Rectangle thisRect    = new Rectangle((int)this.Position.x, (int)this.Position.y, this.ObjectWidth, this.ObjectHeight);
                 Rectangle missileRect = new Rectangle((int)missile.Position.x, (int)missile.Position.y, missile.ObjectWidth, missile.ObjectHeight);
 
                 if (thisRect.IntersectsWith(missileRect))
                 {
+                    Bitmap thisBitmap = new Bitmap(this.Image, this.ObjectWidth, this.ObjectHeight);
+                    Bitmap missileBitmap = new Bitmap(missile.Image, missile.ObjectWidth, missile.ObjectHeight); // Obtention de l'image du missile
+
                     // Effectuer la vérification pixel par pixel seulement si les rectangles se chevauchent
                     int nbOfPixelsInCollision = CheckPixelCollision(thisRect, thisBitmap, missileRect, missileBitmap);
 

@@ -12,13 +12,12 @@ namespace SpaceInvaders
     {
         // Mes variables de jeu
         private GameState state;
-        private Keys currentKey = Keys.None;
         private Size currentScreenSize;
         private SpaceShip playerShip;
         private EnemyBlock enemies;
         private Bunker bunker;
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
-        private HashSet<Keys> pressedKeys = new HashSet<Keys>();
+        private readonly HashSet<Keys> pressedKeys = new HashSet<Keys>();
 
         public Game(int Width, int Height)
         {
@@ -58,7 +57,7 @@ namespace SpaceInvaders
                 double y = Height - gameInstance.hauteurImageBunker - margeBas;
                 bunker = new Bunker(new Vecteur2D(x, y), Side.Neutral)
                 {
-                    ObjectWidth = gameInstance.largeurImageBunker,
+                    ObjectWidth  = gameInstance.largeurImageBunker,
                     ObjectHeight = gameInstance.hauteurImageBunker
                 };
                 gameInstance.ObjetsDuJeu.Add(bunker);
@@ -66,7 +65,7 @@ namespace SpaceInvaders
             }
 
             // Creation du bloc d'ennemies
-            EnemyBlock enemies = new EnemyBlock(Width, new Vecteur2D(0.0, 0.0), Side.Enemy);
+            enemies = new EnemyBlock(Width, new Vecteur2D(0.0, 0.0), Side.Enemy);
             // Ajout des lignes d'ennemies
             enemies.AddLine(8, 1, Resources.alien_jaune, false);
             enemies.AddLine(3, 3, Resources.alien_bleu, true);
@@ -91,24 +90,20 @@ namespace SpaceInvaders
         }
         private void CheckEndGameConditions()
         {
-                // Vérifier si le joueur est mort
-                if (!playerShip.IsAlive())
-                {
-                    state = GameState.Loose;
-                }
-                // Vérifier si tous les ennemis sont détruits
-                else if (enemies != null && !enemies.IsAlive())
-                {
-                    state = GameState.Win;
-                }
-                /*
-                // Vérifier si les ennemis ont atteint le niveau du joueur
-                else if (enemies.ReachedPlayerLevel(playerShip.Position.y))
-                {
-                    state = GameState.Loose;
-                }
-                */
+            if (playerShip != null && !playerShip.IsAlive())
+            {
+                state = GameState.Loose;
+            }
+            else if (enemies != null && !enemies.IsAlive())
+            {
+                state = GameState.Win;
+            }
+            else if (enemies != null && playerShip != null && enemies.ReachedPlayerLevel(playerShip.Position.y))
+            {
+                state = GameState.Loose;
+            }
         }
+
 
         private void HandleCollisions()
         {

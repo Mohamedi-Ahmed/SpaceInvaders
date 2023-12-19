@@ -62,12 +62,8 @@ namespace SpaceInvaders.GameObjects
             if (newHeight < totalShipsHeight){newHeight = totalShipsHeight; }
 
             // Déterminer la position y pour la nouvelle ligne
-            int yPosition = 0;
-            if (enemyShips.Count > 0)
-            {
-                // Si il y a déjà des vaisseaux, positionner la nouvelle ligne en dessous de la dernière
-                yPosition = enemyShips.Max(ship => (int)ship.Position.y) + shipHeight + bottomSpacing;
-            }
+            // Calculer la position y pour la nouvelle ligne de vaisseaux
+            int yPosition = (nbLines - 1) * (shipHeight + bottomSpacing);
 
             // Ajouter chaque vaisseau à la nouvelle ligne
             for (int i = 0; i < nbShips; i++)
@@ -84,46 +80,65 @@ namespace SpaceInvaders.GameObjects
                 enemyShips.Add(newShip);
             }
 
-            // Mise à jour de la taille du bloc
-            UpdateSize(newWidth, newHeight);
+            // Mise à jour de la taille du bloc si nécessaire
+            UpdateSizeBasedOnShips();
         }
-        public void UpdateSize(int maxWidth, int maxHeight) 
+        private void UpdateSizeBasedOnShips()
         {
-            size = new Size(maxWidth, maxHeight);
+            if (enemyShips.Count == 0)
+            {
+                size = new Size(0, 0);
+                return;
+            }
+
+            // Trouver les positions x et y maximales et minimales parmi tous les vaisseaux ennemis
+            int minX = enemyShips.Min(ship => (int)ship.Position.x);
+            int maxX = enemyShips.Max(ship => (int)ship.Position.x + ship.ObjectWidth);
+            int minY = enemyShips.Min(ship => (int)ship.Position.y);
+            int maxY = enemyShips.Max(ship => (int)ship.Position.y + ship.ObjectHeight);
+
+            // Calculer la nouvelle largeur et hauteur du bloc en fonction de ces valeurs
+            int newWidth = maxX - minX;
+            int newHeight = maxY - minY;
+
+            // Mettre à jour la taille du bloc
+            size = new Size(newWidth, newHeight);
+
+            // Mettre à jour également la position du bloc si nécessaire
+            Position = new Vecteur2D(minX, minY);
         }
 
 
-        double vitesseHorizontale = 1.5;
+        double vitesseHorizontale = 3.0;
         int deplacementVertical = 10;
         double incrementVitesse = 0.2;
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
             bool changeDirection = false;
 
-            if (Position.x  <= -size.Width || Position.x  >= size.Width)
+            if (Position.x <= 0 || Position.x + size.Width >= gameSize.Width)
             {
-                // Inverser la direction
-                vitesseHorizontale *= - 1;
+                vitesseHorizontale *= -1;
                 changeDirection = true;
-
-                // Décaler le bloc vers le bas
-                Position.y += deplacementVertical;
-
-                // Augmenter la vitesse horizontale
-                vitesseHorizontale += Math.Sign(vitesseHorizontale) * incrementVitesse;
             }
-            if (changeDirection)
-            {
-                foreach (var ship in enemyShips)
-                {
-                   ship.Position.y += deplacementVertical;
-                }
-            }
+
             // Déplacer le bloc horizontalement
+            Position.x += vitesseHorizontale;
+
             foreach (var ship in enemyShips)
             {
-                ship.Position.x += vitesseHorizontale;
-                Position.x += vitesseHorizontale;
+                ship.Position.x += vitesseHorizontale; // Déplacer chaque vaisseau horizontalement
+
+                if (changeDirection)
+                {
+                    ship.Position.y += deplacementVertical; // Déplacer verticalement seulement lors du changement de direction
+                }
+            }
+
+            if (changeDirection)
+            {
+                Position.y += deplacementVertical; // Déplacer le bloc vers le bas une seule fois par changement de direction
+                vitesseHorizontale += Math.Sign(vitesseHorizontale) * incrementVitesse;
             }
 
             foreach (var ship in enemyShips)
@@ -197,11 +212,37 @@ namespace SpaceInvaders.GameObjects
             }
 
             // Retirer les vaisseaux détruits de l'ensemble des vaisseaux ennemis
-            foreach (var vaisseau in toRemove)
+            enemyShips.RemoveWhere(v => toRemove.Contains(v));
+
+            // Mettre à jour la taille et la position du bloc après la gestion de toutes les collisions
+            UpdateBlockSizeAndPosition();
+        }
+
+        public void UpdateBlockSizeAndPosition()
+        {
+            if (enemyShips.Count > 0)
             {
-                enemyShips.Remove(vaisseau);
+                // Trouver les positions minimales et maximales en x et y
+                int minX = enemyShips.Min(ship => (int)ship.Position.x);
+                int maxX = enemyShips.Max(ship => (int)ship.Position.x + ship.ObjectWidth);
+                int minY = enemyShips.Min(ship => (int)ship.Position.y);
+                int maxY = enemyShips.Max(ship => (int)ship.Position.y + ship.ObjectHeight);
+
+                // Mettre à jour la position du bloc
+                Position.x = minX;
+                Position.y = minY;
+
+                // Mettre à jour la taille du bloc
+                size = new Size(maxX - minX, maxY - minY);
             }
         }
+
+        public bool ReachedPlayerLevel(double playerYPosition)
+        {
+            // Vérifie si l'un des vaisseaux ennemis a atteint ou est passé sous le niveau y du joueur
+            return enemyShips.Any(ship => ship.Position.y  >= playerYPosition - gameInstance.hauteurImageSpaceShip );
+        }
+
 
     }
 }

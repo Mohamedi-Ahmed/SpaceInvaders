@@ -9,7 +9,6 @@ namespace SpaceInvaders.GameObjects
 {
     class SpaceShip : SimpleObject
     {
-
         // Constructeur
         public SpaceShip(Vecteur2D position_initiale, Bitmap image, int vies_initiales, Side side)
             : base(position_initiale, image, vies_initiales, side)
@@ -26,34 +25,33 @@ namespace SpaceInvaders.GameObjects
         {
             if (missile == null || !missile.IsAlive())
             {
-                // Calcule la position x du missile pour qu'il soit centré par rapport au vaisseau
-                double positionXMissile = Position.x + (this.ObjectWidth / 2.0) - (gameInstance.largeurImageMissile / 2.0);
-
-                // Pour les vaisseaux ennemis, positionner le missile en bas du sprite
-                double positionYMissile = Position.y + this.ObjectHeight;
-                Bitmap imageMissile;
-
-                // Créer le missile
-                if (this.ObjectSide == Side.Ally)
-                {
-                    // Pour les vaisseaux alliés, positionner le missile en haut du sprite
-                    positionYMissile = Position.y - gameInstance.hauteurImageMissile;
-                    imageMissile = Resources.projectile; // Image du missile allié
-                }
-                else
-                {
-                    // Pour les vaisseaux ennemis, positionner le missile en bas du sprite
-                    positionYMissile = Position.y + this.ObjectHeight;
-                    imageMissile = Resources.bullet_enemies; // Image du missile ennemi
-                }
-
-                missile = new Missile(new Vecteur2D(positionXMissile, positionYMissile), imageMissile, 1, this.ObjectSide)
-                {
-                    ObjectHeight = gameInstance.hauteurImageMissile,
-                    ObjectWidth = gameInstance.largeurImageMissile
-                };
-                gameInstance.ObjetsDuJeu.Add(missile);
+                PositionMissile(out double positionXMissile, out double positionYMissile);
+                CreateMissile(positionXMissile, positionYMissile);
             }
+        }
+
+        private void PositionMissile(out double x, out double y)
+        {
+            x = Position.x + (ObjectWidth / 2.0) - (gameInstance.largeurImageMissile / 2.0);
+            if (this.ObjectSide == Side.Ally)
+            {
+                y = Position.y - gameInstance.hauteurImageMissile; // Pour les vaisseaux alliés
+            }
+            else
+            {
+                y = Position.y + ObjectHeight; // Pour les vaisseaux ennemis
+            }
+        }
+
+        private void CreateMissile(double x, double y)
+        {
+            Bitmap imageMissile = this.ObjectSide == Side.Ally ? Resources.projectile : Resources.bullet_enemies;
+            missile = new Missile(new Vecteur2D(x, y), imageMissile, 1, this.ObjectSide)
+            {
+                ObjectHeight = gameInstance.hauteurImageMissile,
+                ObjectWidth = gameInstance.largeurImageMissile
+            };
+            gameInstance.ObjetsDuJeu.Add(missile);
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
         {
@@ -87,14 +85,18 @@ namespace SpaceInvaders.GameObjects
 
         public override void Update(HashSet<Keys> pressedKeys, Size gameSize)
         {
-            if (pressedKeys.Contains(Keys.Left))
+            if (pressedKeys.Contains(Keys.Left) || pressedKeys.Contains(Keys.Right))
             {
-                Position.x = Math.Max(0 + -17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
+                if (pressedKeys.Contains(Keys.Left))
+                {
+                    Position.x = Math.Max(0 + -17, Position.x - VitessePixelParSeconde); // Empêche le vaisseau de sortir à gauche
+                }
+                else if (pressedKeys.Contains(Keys.Right))
+                {
+                    Position.x = Math.Min(gameSize.Width - gameInstance.largeurImageSpaceShip + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
+                }
             }
-            else if (pressedKeys.Contains(Keys.Right))
-            {
-                Position.x = Math.Min(gameSize.Width - gameInstance.largeurImageSpaceShip + 17, Position.x + VitessePixelParSeconde); // Empêche le vaisseau de sortir à droite
-            }
+
         }
         public override void Draw(Graphics graphics, int largeur, int hauteur)
         {

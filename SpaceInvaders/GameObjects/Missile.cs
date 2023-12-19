@@ -15,7 +15,7 @@ namespace SpaceInvaders.GameObjects
         public Missile(Vecteur2D position,Bitmap Image, int vies, Side side)
            : base(position, Image, vies, side)
         {
-            this.vitesse = 10.0;
+            this.vitesse = 20.0;
             this.Image = Image;
         }
 
@@ -24,24 +24,14 @@ namespace SpaceInvaders.GameObjects
             if(this.ObjectSide == Side.Ally)
             {
                 this.Position.y -= vitesse;
-                if (this.Position.y < 0)
-                {
-                    Vies = 0;
-                }
+                if (this.Position.y < 0) Vies = 0;
             }
             else
             {
                 this.Position.y += vitesse;
-                if (Position.y > Form.ActiveForm.Height)
-                {
-                    Vies = 0;
-                }
+                if (Position.y > Form.ActiveForm.Height) Vies = 0; 
             }
-            if (!this.IsAlive())
-            {
-                // Retirer le missile de la liste d'objets si ce n'est pas déjà fait
-                gameInstance.ObjetsDuJeu.Remove(this);
-            }
+            if (!this.IsAlive()) gameInstance.ObjetsDuJeu.Remove(this); 
 
         }
         protected override void OnCollision(Missile missile, int numberOfPixelsInCollision)
