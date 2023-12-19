@@ -50,7 +50,7 @@ namespace SpaceInvaders.GameObjects
             // Mettre à jour l'image du bunker
             this.Image = bunkerBitmap;
 
-            missile.Vies -= numberOfPixelsInCollision;
+            missile.LifePoints -= numberOfPixelsInCollision;
         }
 
 
