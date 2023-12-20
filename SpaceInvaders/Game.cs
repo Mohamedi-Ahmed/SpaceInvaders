@@ -19,6 +19,16 @@ namespace SpaceInvaders
         enum GameState { Play, Pause, WelcomeScreen, Win, Loose }
         private readonly HashSet<Keys> pressedKeys = new HashSet<Keys>();
 
+        // Gestion de la pause
+        private bool showResumeMessage = true;
+        private DateTime lastToggle = DateTime.Now;
+
+        // Gestion de la fin de jeu
+        private bool showRestartMessage = true;
+        private DateTime endGameTime;
+        private bool canRestart = false;
+        private const int RestartDelayInSeconds = 2;
+
         public Game(int Width, int Height)
         {
             currentScreenSize = new Size(Width, Height);
@@ -88,17 +98,13 @@ namespace SpaceInvaders
         }
         private void CheckEndGameConditions()
         {
-            if (playerShip != null && !playerShip.IsAlive())
+            if ((playerShip != null && !playerShip.IsAlive()) || //Defaite 
+                (enemies != null && !enemies.IsAlive()) || //Victoire
+                (enemies != null && playerShip != null && enemies.ReachedPlayerLevel(playerShip.Position.y))) // Defaite
             {
-                state = GameState.Loose;
-            }
-            else if (enemies != null && !enemies.IsAlive())
-            {
-                state = GameState.Win;
-            }
-            else if (enemies != null && playerShip != null && enemies.ReachedPlayerLevel(playerShip.Position.y))
-            {
-                state = GameState.Loose;
+                state = playerShip.IsAlive() && enemies != null && !enemies.IsAlive() ? GameState.Win : GameState.Loose;
+                endGameTime = DateTime.Now;
+                canRestart = false;
             }
         }
 
@@ -127,14 +133,32 @@ namespace SpaceInvaders
         {
             Font font = new Font("Arial", 16);
             SizeF textSize = graphics.MeasureString(message, font);
-            PointF positionTexte = new Point(0, 0);
+            PointF positionTexte = new PointF((currentScreenSize.Width - textSize.Width) / 2, (currentScreenSize.Height - textSize.Height) / 2);
 
-            if (Form.ActiveForm != null)
-            {
-               positionTexte = new PointF((Form.ActiveForm.Width - textSize.Width) / 2, (Form.ActiveForm.Height - textSize.Height) / 2);
-
-            }
+            // Message principal
             graphics.DrawString(message, font, Brushes.White, positionTexte);
+
+            if ((state == GameState.Pause && showResumeMessage) || (state == GameState.Win || state == GameState.Loose) && showRestartMessage)
+            {
+                string additionalMessage = state == GameState.Pause ? "Press P button to resume game" : "Press Spacebar to restart the game";
+                SizeF additionalTextSize = graphics.MeasureString(additionalMessage, font);
+                PointF additionalPosition = new PointF((currentScreenSize.Width - additionalTextSize.Width) / 2, positionTexte.Y + 50);
+                graphics.DrawString(additionalMessage, font, Brushes.White, additionalPosition);
+            }
+
+            // Maj de l'état de clignotement toutes les 500 ms
+            if ((DateTime.Now - lastToggle).TotalMilliseconds > 500)
+            {
+                if (state == GameState.Pause)
+                {
+                    showResumeMessage = !showResumeMessage;
+                }
+                else if (state == GameState.Win || state == GameState.Loose)
+                {
+                    showRestartMessage = !showRestartMessage;
+                }
+                lastToggle = DateTime.Now;
+            }
         }
 
 
@@ -165,11 +189,14 @@ namespace SpaceInvaders
                     break;
             }
         }
-        private void RestartGame(Size screenSize)
+        private void RestartGame()
         {
-            // Réinitialiser le jeu
-            // ...
+            gameInstance.GameObjects.Clear();
+            pressedKeys.Clear(); 
             state = GameState.Play;
+            canRestart = false;
+            InitializeGame(currentScreenSize.Width, currentScreenSize.Height);
+
         }
 
         public void Run()
@@ -183,7 +210,7 @@ namespace SpaceInvaders
 
         public void PauseGame()
         {
-            if (state != GameState.Pause)
+            if (state == GameState.Play)
             {
                 state = GameState.Pause;
             }
@@ -221,22 +248,37 @@ namespace SpaceInvaders
         {
             //Console.WriteLine($"KeyUp: {e.KeyCode}");
 
+            if (e.KeyCode == Keys.Space && (state == GameState.Win || state == GameState.Loose) && canRestart)
+            {
+                RestartGame();
+                return;
+            }
+
             pressedKeys.Remove(e.KeyCode);
-            if (e.KeyCode == Keys.Space)
+            if (e.KeyCode == Keys.Space && state == GameState.Play)
             {
                 playerShip.Shoot();
             }
         }
         private void GameLoop()
         {
-            if (state != GameState.Play)
+            switch (state)
             {
-                // Force le redessin même en pause
-                gameInstance.ActiveForm?.Invalidate(); 
-                return; // Ne rien faire si le jeu est en pause
-            }   
-            // Mise à jour
-            Update(currentScreenSize);
+                case GameState.Play:
+                    Update(currentScreenSize);
+                    break;
+
+                case GameState.Pause:
+                    break;
+
+                case GameState.Win:
+                case GameState.Loose:
+                    if (!canRestart && (DateTime.Now - endGameTime).TotalSeconds > RestartDelayInSeconds)
+                    {
+                        canRestart = true;
+                    }
+                    break;
+            }
 
             // Redessiner le formulaire
             gameInstance.ActiveForm?.Invalidate();
