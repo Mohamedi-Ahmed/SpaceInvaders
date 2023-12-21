@@ -5,7 +5,7 @@ Ce projet est une implémentation du jeu classique Space Invaders. Il est écrit
 
 ## Comment cloner et exécuter le projet
 Pour cloner et exécuter ce projet, suivez ces étapes :
-1. Clonez le dépôt en utilisant `git clone [URL du dépôt]`.
+1. Clonez le dépôt en utilisant `git clone https://github.com/Mohamedi-Ahmed/SpaceInvaders.git`.
 2. Ouvrez le fichier `SpaceInvaders.sln` avec Visual Studio.
 3. Exécutez le projet en appuyant sur F5 ou en cliquant sur le bouton 'Start'.
 
@@ -24,4 +24,4 @@ Pour cloner et exécuter ce projet, suivez ces étapes :
 <span style="color:red">3. Soumettez une pull request pour intégrer vos modifications.</span>
 
 ## <span style="color:red">Licence</span>
-<span style="color:red">Ce projet est distribué sous la licence [nom de la licence]. Voir le fichier LICENSE pour plus d'informations.</span>
+<span style="color:red">A ajouter.</span>
