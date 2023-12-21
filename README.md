@@ -19,9 +19,9 @@ Pour cloner et exécuter ce projet, suivez ces étapes :
 
 ## <span style="color:red">Contribuer au projet</span>
 <span style="color:red">Si vous souhaitez contribuer à ce projet, veuillez suivre ces étapes :</span>
-- <span style="color:red">Fork le dépôt.</span>
-- <span style="color:red">Créez une nouvelle branche pour vos modifications.</span>
-- <span style="color:red">Soumettez une pull request pour intégrer vos modifications.</span>
+1. <span style="color:red">Fork le dépôt.</span>
+2. <span style="color:red">Créez une nouvelle branche pour vos modifications.</span>
+3. <span style="color:red">Soumettez une pull request pour intégrer vos modifications.</span>
 
 ## <span style="color:red">Licence</span>
 <span style="color:red">A ajouter.</span>
