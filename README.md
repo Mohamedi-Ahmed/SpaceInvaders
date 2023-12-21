@@ -18,10 +18,10 @@ Pour cloner et exécuter ce projet, suivez ces étapes :
   - `Resources` : Ressources graphiques et sonores.
 
 ## <span style="color:red">Contribuer au projet</span>
-<span style="color:red">Si vous souhaitez contribuer à ce projet, veuillez suivre ces étapes :</span>
-<span style="color:red">1. Fork le dépôt.</span>
-<span style="color:red">2. Créez une nouvelle branche pour vos modifications.</span>
-<span style="color:red">3. Soumettez une pull request pour intégrer vos modifications.</span>
+- <span style="color:red">Si vous souhaitez contribuer à ce projet, veuillez suivre ces étapes :</span>
+- <span style="color:red">1. Fork le dépôt.</span>
+- <span style="color:red">2. Créez une nouvelle branche pour vos modifications.</span>
+- <span style="color:red">3. Soumettez une pull request pour intégrer vos modifications.</span>
 
 ## <span style="color:red">Licence</span>
 <span style="color:red">A ajouter.</span>
